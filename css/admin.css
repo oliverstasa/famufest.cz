@@ -1,0 +1,86 @@
+:root {
+  --submit-color: red;
+  --submit-color-hover: darkred;
+}
+input[type="checkbox"], input[type="password"], input[type="text"], input[type="submit"], input[type="date"], input[type="time"], input[type="datetime-local"], textarea {color: var(--elem-color); background: var(--elem-color-inverse); width: 28vh; font-size: 1.5vh; font-family: regular, helvetica; padding: 1vh 1vh 1vh 1vh; border: none; outline: none;}
+input[type="submit"] {background: var(--submit-color); color: white; padding: 1vh; cursor: pointer; transition: all 0.25s ease; border: none;}
+  input[type="submit"]:hover {background: var(--submit-color-hover);}
+  textarea {width: 60vh; height: 50vh;}
+  input[type="checkbox"] {width: 5vh; height: 5vh;}
+  input[type="time"], input[type="date"] {width: 15vh;}
+form {padding: 0; margin: 0;}
+  select {color: var(--elem-color); background: var(--elem-color-inverse); font-size: 1.8vh; padding: 0.63vh; display: list-item; list-style: none; float: left; font-family: regular; border: none; outline: none; margin-right: 1vh;}
+
+#menu_admin {margin-bottom: 4vh !important;}
+#reloader {animation: flash 2s infinite;}
+#reloader:hover {animation: none;}
+
+  #m_novinky, #m_eventy, #m_kategorie, #m_bloky, #m_venues, #m_program, #m_kino, #m_chat, #m_rezim, #m_rocnik {color: white;}
+  #m_novinky {background-image: linear-gradient(to right, #6699FF 50%, var(--elem-color) 50%);}
+  #m_eventy, #m_kategorie {background-image: linear-gradient(to right, #FF6666 50%, var(--elem-color) 50%);}
+  #m_program, #m_venues, #m_bloky {background-image: linear-gradient(to right, #00CC66 50%, var(--elem-color) 50%);}
+  #m_kino, #m_chat {background-image: linear-gradient(to right, #FF66CC 50%, var(--elem-color) 50%);}
+  #m_rezim, #m_rocnik {background-image: linear-gradient(to right, #000099 50%, var(--elem-color) 50%);}
+
+  #admin_menu .link:hover, #admin_menu .link.selected {color: var(--elem-color-inverse);}
+
+@keyframes flash {
+    0%   {opacity: 0;}
+    10%  {opacity: 1;}
+    90%  {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.wrong {background: var(--submit-color-hover) !important; color: white !important; animation: wiggle_input 0.3s;}
+
+.seznam, .form {border-collapse: collapse;}
+  .seznam {position: relative; margin-bottom: 20vh;}
+  .seznam th {text-align: center; position: sticky; top: 0px; background: var(--elem-color); color: var(--elem-color-inverse);} /* background: var(--elem-color); color: var(--elem-color-inverse); */
+  .seznam tr td, .form tr td, .seznam th {padding: 1.5vh; border-bottom: 1px solid var(--elem-color-inverse);}
+    .form tbody tr:last-child td {border: none;}
+  .seznam tbody tr td:last-child {padding-right: 0px;}
+  .seznam thead th:last-child {padding-right: 1.5vh;}
+  .form .desc {color: gray; padding-top: 1vh; font-size: 1.2vh;}
+
+  .seznam th:first-child, .seznam tr td:first-child, .form tr td:first-child {padding-left: 0; text-align: left;}
+  .seznam thead th:last-child, .seznam tr td:last-child {padding-right: 0; text-align: right;}
+    .form tr td:first-child {vertical-align: top;}
+    .form tr td:last-child {padding-right: 0;}
+    .form tr:last-child td:last-child input[type="submit"] {float: right;}
+
+    .seznam tr td:last-child div {float: right; margin-bottom: 0;}
+      .seznam tr td:last-child div:first-child {margin-right: 0;}
+
+    .form tr.hidden {display: none;}
+
+  #db_form {padding-bottom: 10vh;}
+  #stream_tester {width: 30vh; height: 17vh; background: gray; position: relative; margin-top: 1vh;}
+  /* #platno .video::before {display: block; content: ""; padding-top: 56.25%;} */
+    #stream_tester iframe {position: absolute; width: 100%; height: 100%; top: 0; left: 0;}
+
+        body::-webkit-scrollbar-track {background-color: transparent;}
+        body::-webkit-scrollbar {width: 1vh; height: 1vh; background-color: transparent;}
+        body::-webkit-scrollbar-thumb {background-color: var(--elem-color-inverse);}
+
+  .content {height: 20vh; position: relative;}
+
+  .color {width: 10vh; height: 4vh;}
+
+  .thumb {border: 0.5vh solid var(--elem-color); height: 9vh; transition: all 0.25s ease;}
+  .thumb:hover {cursor: pointer; border: 0.5vh solid var(--elem-color-inverse);}
+  .thumb_input {display: none;}
+  .thumb_form {text-align: center;}
+
+  .delete, .copyme, .changeyear, .entertits {font-size: 1.8vh; padding: 0.7vh 4vh 0.7vh 0.7vh; display: list-item; list-style: none; float: left; background-size: 200% 100%; background-image: linear-gradient(to right, var(--elem-color-inverse) 50%, var(--elem-color) 50%); transition: all 0.5s ease; color: var(--elem-color); margin-right: 1vh;}
+      .copyme, .changeyear, .entertits {padding-right: 0.7vh; background-image: linear-gradient(to right, #00CC66 50%, var(--elem-color) 50%);}
+    .copyme.ok {background: #000099; color: white;}
+      .copyme.ok:hover {color: white;}
+    .delete:hover, .copyme:hover, .delete.selected, .changeyear:hover, .entertits:hover {background-position: 100% 0; cursor: pointer; color: var(--elem-color-inverse);}
+
+  @keyframes wiggle_input {
+      0%   {transform: translateX(-0.5vh);}
+      25%  {transform: translateX(0.5vh);}
+      50%  {transform: translateX(-0.5vh);}
+      75%  {transform: translateX(0.5vh);}
+      100% {transform: translateX(0vh);}
+  }

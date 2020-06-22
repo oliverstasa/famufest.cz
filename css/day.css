@@ -1,0 +1,7 @@
+:root {
+  --elem-color: white;
+  --elem-color-inverse: black;
+  --url: url('/data/img/playbutton_black.png');
+}
+
+  html {scrollbar-color: dark; scrollbar-width: thin;}
