@@ -28,7 +28,18 @@ if (isset($_GET['n'])) {
       <h1>'.lang($new['nazev'], $new['nazev_en']).'</h1>
       <img class="fullthumb lozad" src="/data/img/loading.gif" data-src="'.$thumb.'">
       <div class="fullpopis">
-        <p>'.str_replace("font-family:Arial;", "", nl2br(lang($new['obsah'], $new['obsah_en']))).'</p>
+        <!-- <p>'.str_replace("font-family:Arial;", "", nl2br(lang($new['obsah'], $new['obsah_en']))).'</p> -->
+        ';
+
+            $obsah = lang($new['obsah'], $new['obsah_en']);
+            $data = json_decode($obsah, true);
+            if ($data['blocks'] != '') {
+              json2html($data['blocks'], 'news');
+            } else {
+              echo nl2br($obsah);
+            }
+
+        echo '
       </div>
     </div>';
 

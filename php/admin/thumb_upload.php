@@ -59,7 +59,7 @@ switch ($ext) {
 
         include '../sql_open.php';
 
-          $dotaz = 'UPDATE '.$_GET['table'].' SET thumb = "'.$new_name.'.jpg" WHERE id = "'.$_GET['id'].'"';
+          $dotaz = 'UPDATE '.$_GET['table'].' SET '.$_GET['key'].' = "'.$new_name.'.jpg" WHERE id = "'.$_GET['id'].'"';
            if (mysqli_query($conn, $dotaz)) {
               $result = $new_name.'.jpg';
            } else {

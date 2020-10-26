@@ -37,12 +37,16 @@ if (isset($_SESSION['lord']) == true) {
     echo '
     </select>
     </form>
-    <div class="link'; if ($str == 'news') {echo ' selected';} echo '" link="/admin/news/show" id="m_novinky">NOVINKY</div>
     <div class="link'; if ($str == 'event') {echo ' selected';} echo '" link="/admin/event/show" id="m_eventy">EVENTY</div>
-    <div class="link'; if ($str == 'kategorie') {echo ' selected';} echo '" link="/admin/kategorie/show" id="m_kategorie">KATEGORIE</div>
+    <div class="link'; if ($str == 'kategorie') {echo ' selected';} echo '" link="/admin/kategorie/show" id="m_kategorie">KATEGORIE FILMŮ</div>
     <div class="link'; if ($str == 'blok') {echo ' selected';} echo '" link="/admin/blok/show" id="m_bloky">BLOKY</div>
     <div class="link'; if ($str == 'venue') {echo ' selected';} echo '" link="/admin/venue/show" id="m_venues">VENUES</div>
     <div class="link'; if ($str == 'program') {echo ' selected';} echo '" link="/admin/program/show" id="m_program">PROGRAM</div>
+    <div class="link'; if ($str == 'news') {echo ' selected';} echo '" link="/admin/news/show" id="m_novinky">NOVINKY</div>
+    <div class="link'; if ($str == 'about') {echo ' selected';} echo '" link="/admin/about/show" id="m_about">O FESTIVALU</div>
+    <div class="link'; if ($str == 'contacts') {echo ' selected';} echo '" link="/admin/contacts/show" id="m_kontakty">KONTAKTY</div>
+    <div class="link'; if ($str == 'partneri') {echo ' selected';} echo '" link="/admin/partneri/show" id="m_partneri">PARTNEŘI</div>
+    <div class="link'; if ($str == 'partneri_kat') {echo ' selected';} echo '" link="/admin/partneri_kat/show" id="m_partneri_kat">KATEGORIE PARTNERŮ</div>
     <div class="link'; if ($str == 'kino') {echo ' selected';} echo '" link="/admin/kino/show" id="m_kino">KINO</div>
     <div class="link'; if ($str == 'chat_names') {echo ' selected';} echo '" link="/admin/chat_names/show" id="m_chat">CHAT</div>
     <div class="link'; if ($str == 'settings') {echo ' selected';} echo '" link="/admin/settings/show" id="m_rezim">REŽIM</div>

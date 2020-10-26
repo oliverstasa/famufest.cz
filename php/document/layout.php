@@ -44,6 +44,7 @@
           (SELECT COUNT(*)
                   FROM kino
                   WHERE cas_od < "'.$now.'" AND cas_do > "'.$now.'") AS kino,
+          (SELECT termin FROM rok WHERE active = 1) as termin,
           nazev, nazev_en, link
           FROM news ORDER BY id DESC LIMIT 1
           ';
@@ -116,10 +117,26 @@
     <li class="go_read">'.lang('ČÍTÁRNA', 'READING ROOM').'</li>
     <li link="/partners">'.lang('PARTNEŘI', 'PARTNERS').'</li>
     <li link="/contact">'.lang('KONTAKTY', 'CONTACTS').'</li>
+    <!--
+    <li id="archive"><form><select id="archiverok">';
+
+    $sql = 'SELECT
+            rok
+            FROM rok
+            WHERE publikovano = 1
+            ORDER BY rok';
+    $roky = mysqli_query($conn, $sql);
+
+      while ($rok = mysqli_fetch_assoc($roky)) {
+        echo '<option value="'.$rok['rok'].'"'; if ($rok['rok'] == $_SESSION['rok']) {echo ' selected';} echo '>'.$rok['rok'].'</option>';
+      }
+
+    echo '</select></form>'.lang('ARCHIV', 'ARCHIVE').'</li>
+    -->
     <li link="/lang">'.lang('EN', 'CZ').'</li>
   </ul>
 
-  <div id="ff"'; if ($uri != '/') {echo ' class="page"';} echo '>36th FILM FESTIVAL FAMUFEST 20.—25.5.</div>
+  <div id="ff"'; if ($uri != '/') {echo ' class="page"';} echo '>'.$def['termin'].'</div>
   <div id="hamburgr">☰</div>
   <div id="pg"></div>
   ';

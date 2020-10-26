@@ -99,4 +99,59 @@ function tmstmp($timestamp) {
 
 }
 
+// JSON2HTML
+////////////////////////////////////////////////////////////////////////////////
+function json2html($data, $typ) {
+
+    foreach ($data as $key=>$value){
+      switch ($value['type']) {
+        case 'paragraph':
+          $cntnt = str_replace(array('"’', '’"'), array("'", "'"), preg_replace('/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})/', '<a href="mailto:$1">$1</a>', $value['data']['text']));
+          if ($typ == 'page') {
+            echo '<div class="content">'.$cntnt.'</div>';
+          } else {
+            echo '<p>'.$cntnt.'</p>';
+          }
+        break;
+        case 'header':
+          if ($typ == 'page') {
+            echo '<h1>'.$value['data']['text'].'</h1>';
+          } else {
+            echo '<h1 style="padding-bottom: 1vh; padding-top: 4vh;">'.$value['data']['text'].'</h1>';
+          }
+        break;
+        case 'image':
+          echo '<img src="'.str_replace('\\', '', $value['data']['file']['url']).'">';
+        break;
+        case 'table':
+          echo '<div class="content contenter"><table class="cenova">';
+          $tabulka = $value['data']['content'];
+          for ($t = 0; $t < sizeof($tabulka); $t++) {
+            echo '<tr>';
+            for ($d = 0; $d < sizeof($tabulka[$t]); $d++) {
+              echo '<td>'.$tabulka[$t][$d].'</td>';
+            }
+            echo '</tr>';
+          }
+          echo '</table></div>';
+        break;
+      }
+    }
+
+}
+
+// helper
+////////////////////////////////////////////////////////////////////////////////
+function helfer($page) {
+
+  switch($page) {
+    case '': break;
+  }
+
+  for ($h = 0; $h < sizeof($types); $h++) {
+    $ress .= '<div class="help" helpwith="'.$types[$h].'">NÁVOD</div>';
+  }
+
+}
+
 ?>

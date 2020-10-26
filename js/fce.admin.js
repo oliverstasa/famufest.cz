@@ -213,11 +213,18 @@ $('.thumb_input').change(function(){
 $('.thumb_form').submit(function(e) {
   var id = $(this).attr('fk_id');
   var table = $(this).attr('table');
+  var key = $(this).attr('key');
   var img = $(this).find('img.thumb');
   img.attr('src', '/data/img/loading.gif');
 
+  if (key == 'logo') {
+    var uploadr = 'uploadPNG.php';
+  } else {
+    var uploadr = 'thumb_upload.php';
+  }
+
   $.ajax({
-          url: '/php/admin/thumb_upload.php?table='+table+'&id='+id,
+          url: '/php/admin/'+uploadr+'?table='+table+'&key='+key+'&id='+id,
           type: "POST",
           data: new FormData(this),
           contentType: false,
@@ -225,11 +232,16 @@ $('.thumb_form').submit(function(e) {
           processData:false,
           success: function(data) {
            switch (data) {
-             case 'invalid': alert('obrázek musí být ve formátu .jpg'); break;
+             case 'invalid': alert('obrázek je ve špatném formátu'); break;
              case 'error': alert('chyba uploadu'); break;
              default:
                 if (data) {
-                  img.attr('src', '/data/up/s/'+data);
+                  if (key == 'logo') {
+                    img.attr('src', '/data/partneri/'+data);
+                    img.addClass('ispng');
+                  } else {
+                    img.attr('src', '/data/up/s/'+data);
+                  }
                 } else {
                   alert('chyba v uložení souboru');
                 }
@@ -242,6 +254,62 @@ $('.thumb_form').submit(function(e) {
   e.preventDefault();
   return false;
 });
+
+
+// VIDEO UPLOAD
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('click', '.thumb_video', function(){
+  $(this).parent('form').find('.video_input').trigger('click');
+});
+
+$('.video_input').change(function(){
+  $(this).closest('form').submit();
+});
+
+$('.video_form').submit(function(e) {
+
+  var form = $(this);
+  var id = $(this).attr('fk_id');
+  var table = $(this).attr('table');
+  var key = $(this).attr('key');
+  form.find('video').remove();
+  form.find('img.thumb').remove();
+  $('.video_form').append('<img class="thumb thumb_video" src="/data/img/loading.gif">');
+
+  $.ajax({
+          url: '/php/admin/uploadMp4.php?table='+table+'&key='+key+'&id='+id,
+          type: "POST",
+          data: new FormData(this),
+          contentType: false,
+          cache: false,
+          processData:false,
+          success: function(data) {
+           switch (data) {
+             case 'invalid':
+                form.find('img.thumb').attr('src', '/data/img/upload.jpg');
+                alert('video musí být ve formátu .mp4');
+             break;
+             case 'error':
+                form.find('img.thumb').attr('src', '/data/img/upload.jpg');
+                alert('chyba uploadu');
+             break;
+             default:
+                if (data) {
+                  $('.video_form img.thumb').remove();
+                  $('.video_form').append('<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'+data+'"></video>');
+                } else {
+                  alert('chyba v uložení souboru');
+                }
+             break;
+           }
+          },
+          error: function(e) {alert('wtf, si online?');}
+  });
+
+  e.preventDefault();
+  return false;
+});
+
 
 // AKTIVOVAT ROCNIK
 ////////////////////////////////////////////////////////////////////////////////
@@ -378,7 +446,7 @@ $("#db_form").submit(function(e){
   var db_id = $('input[type="submit"]').attr('db_id');
   var list = 'table:"'+table+'"';
 
-  $('#db_form input[type="text"], #db_form select, #db_form input[type="checkbox"], #db_form input[type="date"], #db_form input[type="time"], #db_form input[type="datetime-local"], #db_form textarea').each(function(){
+  $('#db_form div.editorjs, #db_form input[type="text"], #db_form select, #db_form input[type="checkbox"], #db_form input[type="date"], #db_form input[type="time"], #db_form input[type="datetime-local"], #db_form textarea').each(function(){
     var name = $(this).attr('name');
     if ($(this).attr('type') == 'checkbox') {
       if ($(this).is(":checked")) {
@@ -398,10 +466,17 @@ $("#db_form").submit(function(e){
           }
           name = 'id_event';
         break;
+        case 'page': case 'obsah':
+          var val = $('#editor_json_1').val();
+        break;
+        case 'page_en': case 'obsah_en':
+          var val = $('#editor_json_2').val();
+        break;
         default:
           var val = $(this).val();
         break;
       }
+      //console.log(val);
       val = val.replace(/,/g, "/carka/");
       val = val.replace(/"/g, "/uvozovka/");
       val = val.replace(/'/g, "/uvozovka2/");

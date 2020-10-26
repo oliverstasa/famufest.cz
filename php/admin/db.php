@@ -21,6 +21,7 @@ $id = isset($pg[4])?$pg[4]:false;
 echo '
 <div class="link'; if ($akce == 'show') {echo ' selected';} echo '" link="/admin/'.$oblast.'/show">👁 ZOBRAZIT</div>
 <div class="link'; if ($akce == 'add') {echo ' selected';} echo '" link="/admin/'.$oblast.'/add">♘ PŘIDAT</div>
+<!-- <div class="help" helpwith="'.$oblast.'">NÁVOD</div> -->
 ';
 
 echo '
@@ -51,15 +52,15 @@ switch ($oblast){
 
       switch ($oblast) {
         case 'rok':
-          $names = array(array('rok', 'ROK'), array('active', 'STAV'));
-          $sql = 'SELECT id, rok, active FROM rok';
+          $names = array(array('rok', 'ROK'), array('termin', 'TERMÍN'), array('og', 'OG (.jpg)'), array('thumb', 'BG/THUMB (.jpg)'), array('video', 'VIDEO (.mp4)'), array('publikovano', 'VEŘEJNÉ'), array('active', 'STAV'));
+          $sql = 'SELECT id, rok, publikovano, active, termin, og, thumb, video FROM rok';
         break;
         case 'program':
           $names = array(array('event', 'EVENT'), array('venue', 'VENUE'), array('datum', 'DATUM'), array('zacatek', 'ZAČÁTEK'), array('konec', 'KONEC'), array('online', 'ONLINE'));
           $sql = 'SELECT id, typ, id_event, (SELECT nazev FROM venue WHERE id = program.id_venue) AS venue, datum, zacatek, konec, online FROM program WHERE rok = '.$_SESSION['rok'];
         break;
         case 'event':
-          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('typ', 'TYP'), array('blok', 'BLOK'), array('kat', 'KATEGORIE'), array('embed', 'VIDEO'), array('thumb', 'THUMB'));
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('typ', 'TYP'), array('blok', 'BLOK'), array('kat', 'KATEGORIE'), array('embed', 'VIDEO'), array('thumb', 'THUMB (.jpg)'));
           $sql = 'SELECT rok, id, (SELECT zkr FROM blok WHERE id = event.id_blok) AS blok, (SELECT nazev FROM kategorie WHERE id = event.id_kat) AS kat, typ, link, nazev, nazev_en, popis, popis_en, thumb, aramis, embed, geoblok FROM event WHERE rok = '.$_SESSION['rok'];
         break;
         case 'blok':
@@ -71,7 +72,7 @@ switch ($oblast){
           $sql = 'SELECT id, nazev, nazev_en, color FROM venue WHERE rok = '.$_SESSION['rok'];
         break;
         case 'news':
-          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'),  array('publikovano', 'STAV'), array('cas_od', 'OD'), array('thumb', 'THUMB'));
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'),  array('publikovano', 'STAV'), array('cas_od', 'OD'), array('thumb', 'THUMB (.jpg)'));
           $sql = 'SELECT id, nazev, nazev_en, publikovano, cas_od, thumb FROM news WHERE rok = '.$_SESSION['rok'];
         break;
         case 'settings':
@@ -89,6 +90,22 @@ switch ($oblast){
         case 'kategorie':
           $names = array(array('nazev', 'NÁZEV'), array('nazev_en', 'NÁZEV [EN]'));
           $sql = 'SELECT id, nazev, nazev_en FROM kategorie';
+        break;
+        case 'partneri':
+          $names = array(array('logo', 'LOGO (celobílé transparentní .png)'), array('nazev', 'PARTNER'), array('odkaz', 'ODKAZ'), array('kategorie', 'KATEGORIE'));
+          $sql = 'SELECT id, nazev, odkaz, logo, (SELECT nazev FROM partneri_kat WHERE id = partneri.id_kat) AS kategorie FROM partneri WHERE rok = '.$_SESSION['rok'];
+        break;
+        case 'partneri_kat':
+          $names = array(array('nazev', 'NÁZEV'), array('nazev_en', 'NÁZEV [EN]'));
+          $sql = 'SELECT id, nazev, nazev_en FROM partneri_kat';
+        break;
+        case 'contacts':
+          $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('timestamp', 'ZMĚNĚNO'));
+          $sql = 'SELECT id, page, page_en, timestamp FROM contacts WHERE rok = '.$_SESSION['rok'];
+        break;
+        case 'about':
+          $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('timestamp', 'ZMĚNĚNO'));
+          $sql = 'SELECT id, page, page_en, timestamp FROM about WHERE rok = '.$_SESSION['rok'];
         break;
       }
 
@@ -127,13 +144,19 @@ switch ($oblast){
                       $res = '';
                     break;
                     */
-                    case 'thumb':
+                    case 'thumb': case 'og': case 'logo':
                       //$res = $row[$key]?'✔':'⨯';
-                      $thumb = $row[$key]?'/data/up/s/'.$row[$key]:'/data/img/upload.jpg';
+                      if ($key == 'logo') {
+                        $rlurl = '/data/partneri/';
+                        $rlcls = ' ispng '.$_SESSION['daytime'];
+                      } else {
+                        $rlurl = '/data/up/s/';
+                      }
+                      $thumb = $row[$key]?$rlurl.$row[$key]:'/data/img/upload.jpg';
                       $res = '
-                      <form class="thumb_form" fk_id="'.$row['id'].'" table="'.$oblast.'">
-                        <img src="'.$thumb.'" class="thumb">
-                        <input type="file" accept="image/jpeg, image/jpg" class="thumb_input" name="thumb_input">
+                      <form class="thumb_form" fk_id="'.$row['id'].'" table="'.$oblast.'" key="'.$key.'">
+                        <img src="'.$thumb.'" class="thumb'.$rlcls.'">
+                        <input type="file" accept="'; if ($key == 'logo') {$res .= 'image/png';} else {$res .= 'image/jpeg, image/jpg';} $res .= '" class="thumb_input" name="thumb_input">
                       </form>';
                     break;
                     case 'active':
@@ -162,8 +185,16 @@ switch ($oblast){
                     case 'typ':
                       $res = strtoupper($row[$key]);
                     break;
-                    case 'stream_link':
+                    case 'stream_link': case 'page': case 'page_en': case 'odkaz':
                       $res = $row[$key]?'✔':'⨯';
+                    break;
+                    case 'video':
+                      $thumb = $row[$key]?'<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'.$row[$key].'"></video>':'<img src="/data/img/upload.jpg" class="thumb">';
+                      $res = '
+                      <form class="video_form" fk_id="'.$row['id'].'" table="'.$oblast.'" key="'.$key.'">
+                        '.$thumb.'
+                        <input type="file" accept="video/mp4" class="video_input" name="video_input">
+                      </form>';
                     break;
                     case 'embed':
                       $res = $row[$key]?'✔':'⨯';
@@ -188,7 +219,7 @@ switch ($oblast){
                         case 2: $res = "ONLINE IHNED"; break;
                       }
                     break;
-                    case 'cas_od': case 'cas_do': case 'zacatek': case 'konec': case 'cas_spusteni':
+                    case 'cas_od': case 'cas_do': case 'zacatek': case 'konec': case 'cas_spusteni': case 'timestamp':
                       $res = tmstmp($row[$key]);
                     break;
                     case 'datum':
@@ -205,7 +236,7 @@ switch ($oblast){
                   echo '
                   <td>
                     ';
-                    if ($oblast == 'news' || $oblast == 'venue') {
+                    if ($oblast == 'news' || $oblast == 'venue' || $oblast == 'partneri' || $oblast == 'partneri_kat') {
 
                       $switcher = mysqli_query($conn, 'SELECT id, (SELECT id FROM '.$oblast.' WHERE id > '.$row['id'].' ORDER BY id LIMIT 1) AS id_prev, (SELECT id FROM '.$oblast.' WHERE id < '.$row['id'].' ORDER BY id DESC LIMIT 1) AS id_next FROM '.$oblast.' LIMIT 1');
                       $id = mysqli_fetch_assoc($switcher);
@@ -258,10 +289,14 @@ switch ($oblast){
 ////////////////////////////////////////////////////////////////////////////////
     case 'add': case 'edit':
 
+      $editor_descrip = '<br>FUNKCE EDITORU:<br><br>nový řádek v textu: [shift]+[enter]<br>ukončit blok: [enter] nebo kliknout na nový řádek<br>nový řádek tabulky: [enter] nebo (+) po najetí za poslední řádek<br>nová buňka: (+) po najetí ža poslední buňku<br><i>text@text.xy</i> se automaticky změní na odkaz<br>nabídka k vytvoření odkazu se zobrazí po vybrání textu<br>obrázek pouze .jpg';
+
       switch ($oblast) {
         case 'rok':
           $vals = array(
-                    array('sql' => 'rok', 'name' => 'ROČNÍK', 'desc' => '2020, 2021, ...', 'type' => 'txt')
+                    array('sql' => 'publikovano', 'name' => 'PUBLIKOVANO', 'desc' => 'povolení zobrazovat se', 'type' => 'checkbox'),
+                    array('sql' => 'rok', 'name' => 'ROČNÍK', 'desc' => '2020, 2021, ...', 'type' => 'txt'),
+                    array('sql' => 'termin', 'name' => 'TERMÍN', 'desc' => 'zobrazí se v pravém dolním rohu:<br><i>XX</i>th FILM FESTIVAL FAMUFEST <i>XX</i>.—<i>XX</i>.<i>XX</i>.<br>36th FILM FESTIVAL FAMUFEST 20.—25.5.', 'type' => 'txt')
                     // array('sql' => 'active', 'name' => 'AKTIVNÍ', 'desc' => 'pokud zakliknuto aktivní, tento ročník se defaultně zobrazuje', 'type' => 'checkbox')
                   );
         break;
@@ -317,8 +352,8 @@ switch ($oblast){
                     array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => 'min. 20 znaků<br>např. VYHLÁŠENÍ VÍTĚZŮ 2020', 'type' => 'txt'),
                     array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => 'min. 20 znaků', 'type' => 'txt'),
                     array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => $_SESSION['rok'].'-WINNERS =><br>/news/'.$_SESSION['rok'].'-WINNERS', 'type' => 'txt'),
-                    array('sql' => 'obsah', 'name' => 'OBSAH [CZ]', 'desc' => '', 'type' => 'txtarea'),
-                    array('sql' => 'obsah_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'txtarea')
+                    array('sql' => 'obsah', 'name' => 'OBSAH [CZ]', 'desc' => '', 'type' => 'div'),
+                    array('sql' => 'obsah_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
                 );
         break;
         case 'settings':
@@ -355,6 +390,31 @@ switch ($oblast){
                     array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => 'ohlednuti =><br>/films/category/ohlednuti<br>*pozor! není závislé na ročníku => platí plošně', 'type' => 'txt')
                 );
         break;
+        case 'partneri':
+          $vals = array(
+                    array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'select', 'fkey' => 'partneri_kat'),
+                    array('sql' => 'nazev', 'name' => 'NÁZEV', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'odkaz', 'name' => 'ODKAZ', 'desc' => 'https://www.xy.com', 'type' => 'txt')
+                );
+        break;
+        case 'partneri_kat':
+          $vals = array(
+                    array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => '', 'type' => 'txt')
+                );
+        break;
+        case 'contacts':
+          $vals = array(
+                    array('sql' => 'page', 'name' => 'OBSAH [CZ]', 'desc' => $editor_descrip, 'type' => 'div'),
+                    array('sql' => 'page_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
+                );
+        break;
+        case 'about':
+          $vals = array(
+                    array('sql' => 'page', 'name' => 'OBSAH [CZ]', 'desc' => $editor_descrip, 'type' => 'div'),
+                    array('sql' => 'page_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
+                );
+        break;
       }
 
       if (isset($id) && $akce == 'edit') {
@@ -389,28 +449,15 @@ switch ($oblast){
         </script>
         ';
 
-      } else if ($oblast == 'news') {
+      } else if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts') {
+
+        $editor_count = 1;
 
         echo '
-        <script src="/js/editor/dist/trumbowyg.min.js"></script>
-        <script src="/js/editor/dist/plugins/noembed/trumbowyg.noembed.min.js"></script>
-        <link rel="stylesheet" href="/js/editor/dist/ui/trumbowyg.min.css">
-        <script type="text/javascript">
-          $("textarea").trumbowyg({
-            btns: [
-              ["viewHTML"],
-              ["formatting"],
-              ["strong", "em", "del"],
-              /* ["superscript", "subscript"], */
-              ["link", "noembed", "insertImage"],
-              ["justifyLeft", "justifyFull"], /*"justifyCenter", "justifyRight"*/
-              ["unorderedList", "orderedList"],
-              ["removeformat"],
-              ["fullscreen"],
-            ],
-            removeformatPasted: true
-          });
-          </script>
+          <script src="/js/editor_json/dist/editor.js"></script>
+          <script src="/js/editor_json/dist/image.js"></script>
+          <script src="/js/editor_json/dist/table.js"></script>
+          <script src="/js/editor_json/dist/header.js"></script>
         ';
 
       } else if ($oblast == 'event' && $akce == 'edit') {
@@ -457,6 +504,85 @@ switch ($oblast){
             echo '<textarea autocomplete="off" name="'.$vals[$v]['sql'].'">';
               if (isset($id) && $akce == 'edit') {echo $editing[$vals[$v]['sql']];}
             echo '</textarea>';
+          break;
+          // DIV = JSON textarea
+          ///////////////
+          case 'div':
+
+              echo '
+              <script>
+
+              var editor_'.$editor_count.' = new EditorJS({
+
+                holder: \'editorjs_'.$editor_count.'\'
+                ,
+
+                onChange: () => {
+                  previewContent'.$editor_count.'();
+                }
+                ,
+
+                tools: {
+
+                    header: {
+                      class: Header,
+                      config: {
+                        placeholder: \'Nadpis\',
+                        levels: [2], // [2, 3, 4]
+                        defaultLevel: 2
+                      }
+                    }
+                ,
+                    image: {
+                      class: ImageTool,
+                      config: {
+                        types: \'image/jpg\',
+                        endpoints: {
+                          byFile: \'/php/admin/imgUploadJSON.php\'
+                        }
+                      }
+                    }
+                ,
+                    table: {
+                      class: Table,
+                      inlineToolbar: true,
+                      config: {
+                        rows: 2,
+                        cols: 2
+                      }
+                    }
+
+                }
+                ';
+
+                if (isset($id) && $akce == 'edit' && $editing[$vals[$v]['sql']] != '') {
+                echo '
+                ,
+                data: '.str_replace(array("'"), array("’"), $editing[$vals[$v]['sql']]);
+                }
+
+                echo '
+
+              });
+
+              ';
+
+              if (isset($id) && $akce == 'edit' && $editing[$vals[$v]['sql']] != '') {
+                echo '
+                setTimeout(function(){
+                  previewContent'.$editor_count.'();
+                }, 1500);
+                ';
+              }
+
+              echo '
+
+              </script>
+              <div id="editorjs_'.$editor_count.'" class="editorjs" name="'.$vals[$v]['sql'].'"></div><div class="editor_preview'; if ($oblast == 'partneri' || $oblast == 'news') {echo ' partneri';} echo '" id="editor_preview_'.$editor_count.'"></div><input class="fullthumb" id="editor_json_'.$editor_count.'">
+              ';
+
+            $editor_count++;
+
           break;
           // SELECT
           ///////////////
@@ -593,13 +719,62 @@ switch ($oblast){
       }
 
       echo '
-      <tr><td></td><td><input type="submit" name="'.$oblast.'" akce="'.$akce.'" db_id="'.$id.'" value="'; if ($akce == 'edit') {echo 'UPRAVIT';} else {echo 'PŘIDAT';} echo '"></td></tr>
+      <tr>
+        <td></td>
+        <td><input id="saveButton" type="submit" name="'.$oblast.'" akce="'.$akce.'" db_id="'.$id.'" value="'; if ($akce == 'edit') {echo 'UPRAVIT';} else {echo 'PŘIDAT';} echo '"></td>
+      </tr>
       ';
 
       echo '
       </table>
       </form>
       ';
+
+      if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts') {
+        echo '
+        <script>
+
+          function normalize(str) {
+            str = str.replace(/’/g, "\'");
+            str = str.replace(/\\\/g, "");
+            str = str.replace(/=\"/g, "=");
+            str = str.replace(/\">/g, ">");
+            return str;
+          }
+
+          function previewContent1() {
+
+            editor_1.save().then((outputData) => {
+              $.post(\'/php/json2html.php\', {data: outputData, oblast: "'.$oblast.'"}, function(res){
+                $(\'#editor_preview_1\').html(res);
+                var newdata = normalize(JSON.stringify(outputData));
+                if (!outputData.blocks.length) {
+                  newdata = \'\';
+                }
+                $(\'#editor_json_1\').val(newdata);
+              });
+            });
+
+          }
+
+          function previewContent2() {
+
+            editor_2.save().then((outputData) => {
+              $.post(\'/php/json2html.php\', {data: outputData, oblast: "'.$oblast.'"}, function(res){
+                $(\'#editor_preview_2\').html(res);
+                var newdata = normalize(JSON.stringify(outputData));
+                if (!outputData.blocks.length) {
+                  newdata = \'\';
+                }
+                $(\'#editor_json_2\').val(newdata);
+              });
+            });
+
+          }
+
+        </script>
+        ';
+      }
 
     break;
 
@@ -640,6 +815,14 @@ switch ($oblast){
               mysqli_query($conn, 'UPDATE program SET id_venue = 0 WHERE id_venue = '.$id1);
               mysqli_query($conn, 'UPDATE program SET id_venue = '.$id1.' WHERE id_venue = '.$id2);
               mysqli_query($conn, 'UPDATE program SET id_venue = '.$id2.' WHERE id_venue = 0');
+
+            }
+
+            if ($oblast == 'partneri_kat') {
+
+              mysqli_query($conn, 'UPDATE partneri SET id_kat = 0 WHERE id_kat = '.$id1);
+              mysqli_query($conn, 'UPDATE partneri SET id_kat = '.$id1.' WHERE id_kat = '.$id2);
+              mysqli_query($conn, 'UPDATE partneri SET id_kat = '.$id2.' WHERE id_kat = 0');
 
             }
 

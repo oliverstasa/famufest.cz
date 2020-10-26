@@ -40,6 +40,11 @@
           }
 
         break;
+        default:
+
+          $og_sql = 'SELECT og FROM rok WHERE active = 1';
+
+        break;
       }
 
       if (isset($og_sql)) {
@@ -50,7 +55,7 @@
         if (mysqli_num_rows($og_ress) > 0) {
 
           $og_vysledek = mysqli_fetch_assoc($og_ress);
-          echo '<meta property="og:image" content="https://famufest.cz/data/up/'.$og_vysledek['thumb'].'">';
+          echo '<meta property="og:image" content="https://famufest.cz/data/up/'.$og_vysledek['og'].'">';
 
         }
 

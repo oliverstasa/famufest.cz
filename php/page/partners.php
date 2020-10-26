@@ -1,22 +1,63 @@
 <?php
 session_start();
 
-function daytime($day, $night) {
-
-  switch($_SESSION['daytime']) {
-    case 'day': return $night; break;
-    case 'night': return $day; break;
-  }
-
-}
-
 include '../fce.php';
+include '../sql_open.php';
 
 $loading = '/data/img/loading.gif';
-$dir = '/data/img/partneri';
+$dir = '/data/partneri/';
+$prevkat = false;
+$pr = 1;
 
-echo '
-<div id="partners" class="content" style="padding-top: 0;">
+  $sql = 'SELECT
+          id, id_kat, nazev, odkaz, logo,
+          (SELECT nazev FROM partneri_kat WHERE id = partneri.id_kat) AS kat_nazev,
+          (SELECT nazev FROM partneri_kat WHERE id = partneri.id_kat) AS kat_nazev_en
+          FROM partneri
+          WHERE rok = "'.$_SESSION['rok'].'"
+          ORDER BY id_kat DESC, id';
+  $part = mysqli_query($conn, $sql);
+
+  if (mysqli_num_rows($part) > 0) {
+
+    echo '<div id="partners" class="content" style="padding-top: 0;">';
+
+    while ($partner = mysqli_fetch_assoc($part)) {
+
+      if ($prevkat != $partner['id_kat']) {
+        echo '<h1>'.lang($partner['kat_nazev'], $partner['kat_nazev_en']).'</h1>';
+        if ($pr > 1) {echo '</div>';}
+        echo '<div class="partners">';
+      }
+
+      echo '<a href="'.$partner['odkaz'].'" target="_blank">';
+
+      if ($partner['logo']) {
+        echo '<img class="lozad parneros '.$_SESSION['daytime'].'" src="'.$loading.'" data-src="'.$dir.$partner['logo'].'">';
+      } else {
+        echo $partner['nazev'];
+      }
+
+      echo '</a>';
+
+      $prevkat = $partner['id_kat'];
+      $pr++;
+
+    }
+
+    echo '</div>';
+
+  } else {
+
+    echo '<h1>'.lang('ŽÁDNÍ PARTNEŘI', 'NO PARTNERS').'</h1>';
+
+  }
+
+include '../sql_close.php';
+include '../document/lz.php';
+
+/*
+</div>
 
   <h1>'.lang('Pořadatel festivalu', 'Festival organizer').'</h1>
   <div class="partners">
@@ -94,8 +135,5 @@ echo '
   </div>
   -->
 </div>
-';
-
-include '../document/lz.php';
-
+*/
 ?>

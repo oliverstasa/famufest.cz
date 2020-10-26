@@ -14,7 +14,7 @@ $(document).on('click touch', '#menu li, .link, .film, .news', function() {
     }
 
   var url = $(this).attr('link');
-  if (url.length && url != "#") {
+  if (url && url.length && url != "#") {
     page(url);
   }
 
@@ -174,6 +174,17 @@ function jazyk(cz, en) {
   }
 
 }
+
+// ARCHIVAR
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('mouseenter mouseleave', '#archive', function(){
+  $(this).toggleClass('archiver');
+});
+$("#archiverok").change(function(){
+  $.get('/php/admin/rok_switch.php?to='+$(this).val(), function(){
+    page('reload');
+  });
+});
 
 // EASTER EGGS
 ////////////////////////////////////////////////////////////////////////////////

@@ -29,7 +29,7 @@ if ($_SESSION['lord'] === true) {
   $errors = array();
   $sql_tester = array();
   $control = '';
-  if ($params['table'] != 'program') {
+  if ($params['table'] != 'program' && $params['table'] != 'partneri') {
 
     if ($_POST['akce'] == 'edit') {$control = ' AND id <> '.$_POST['id'];}
     foreach ($params as $key => $val) {
@@ -101,7 +101,7 @@ if ($_SESSION['lord'] === true) {
           }
         }
 
-        if ($params['table'] == 'rok' || $params['table'] == 'settings' || $params['table'] == 'kategorie' || $params['table'] == 'kino') {
+        if ($params['table'] == 'rok' || $params['table'] == 'settings' || $params['table'] == 'kategorie' || $params['table'] == 'kino' || $params['table'] == 'partneri_kat') {
           $sql = 'INSERT INTO '.$params['table'].'('.implode(", ", $insert_names).') VALUES ('.implode(", ", $insert_values).')';
         } else {
           $sql = 'INSERT INTO '.$params['table'].'('.implode(", ", $insert_names).', rok) VALUES ('.implode(", ", $insert_values).', '.$_SESSION['rok'].')';

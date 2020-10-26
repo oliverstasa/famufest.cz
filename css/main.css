@@ -31,6 +31,11 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
     #menu li.live.selected {background-size: 210% 100%; background-image: linear-gradient(to right, black 50%, red 50%); }
       #menu li.live.selected:hover {background-position: 97.5% 0;}
 
+  #archive {cursor: default !important; margin-left: -14vh;}
+    #archive.archiver {margin-left: 0vh;}
+    #archive form {float: left; margin-right: 3vh; margin-left: -4vh; background: var(--elem-color-inverse); margin-top: -0.63vh; margin-bottom: -0.63vh;}
+    #archive select {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 1.8vh; display: list-item; list-style: none; float: left; border: none; outline: none; margin-right: 1vh; font-family: regular, helvetica; width: 11vh; padding: 0.62vh 1vh; margin-left: 3vh;}
+
   #novinka {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 2.6vh; padding: 0.8vh 0.8vh 0.8vh 5vh; position: absolute; top: 93vh; left: 0; width: 100%; max-width: calc(100% - 65vh); z-index: 11; overflow: hidden; transition: all 0.3s ease;}
     #novinka .slider {animation: slider 20s linear infinite; animation-play-state: running; white-space: nowrap; overflow: hidden; position: relative; float: left;}
     #novinka .slider div {white-space: nowrap; display: table-cell;}
@@ -115,11 +120,13 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
   #partners h1 {font-size: 1.4vh; padding-bottom: 5vh;}
   .partners {padding-bottom: 3vh;}
   .partners img {max-width: 18vh; max-height: 12vh; padding: 0 8vh 10vh 0; vertical-align: middle; transition: all 0.3s ease;} /* mw20vh mh10vh */
+    .partners img.day {filter: invert(1);}
   .partners a:hover img {transform: scale(1.05);}
 
   .pg_normal.ofestu {max-width: 50vh; transform-origin: top left;}
   .pg_normal {width: calc(100% - 10vh); -webkit-transform: translate3d(0, 0, 0); float: left;}
     .pg_normal .content {max-width: 60vh; padding: 2vh 0vh 4vh 0vh; text-align: left; z-index: 1;}
+      .pg_normal .contenter {padding: 0 !important;}
       .pg_normal .content:last-child {padding-bottom: 12vh;}
     .pg_normal h1 {font-size: 1.8vh; padding: 0.7vh 5vh 0.7vh 0.7vh; background: var(--elem-color-inverse); color: var(--elem-color); width: auto; float: left; clear: both; margin-bottom: 1vh; font-family: regular, helvetica; z-index: 1;}
       .cenova {border-collapse: collapse; width: 100%; margin: 2vh 0vh;}
@@ -228,6 +235,7 @@ h1 .adresa {display: list-item; padding-left: 0;}
 #homepage video {display: none !important;}
 #ff {display: none;}
 #cookie {bottom: 0; top: auto; left: 0; width: calc(100% - 2vh); padding: 1vh; font-size: 1.8vh;}
+.cenova {border-collapse: collapse; width: 100%; margin: 2vh 0vh;}
 
 #platno {min-width: auto; width: 100%; margin-top: 3vh;}
   #platno .video {width: 100%; max-width: 100%;}
