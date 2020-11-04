@@ -21,7 +21,7 @@ function helfer($page, $cont = false) {
   switch($page) {
     case 'intro':
       $help = array(array('html' => '
-      <img src=\'/data/help/h1.png\' style=\'width: 60vh;\'>
+      <img src=\'/data/help/h1.png\' style=\'width: 60vh;\'><br>
       (!) Pokud kterákoli z nabídek není vyplněna žádným obsahem, nezobrazí se vůbec v menu<br>
       <ul>
         <li><strong>2020 (YYYY)</strong> — přepíná administraci do požadovaného ročníku, tj. všechny akce v jednotlivých sekcích se ukládají do uvedeného ročníku</li>
