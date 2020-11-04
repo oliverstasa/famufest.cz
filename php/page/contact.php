@@ -8,7 +8,7 @@ include '../sql_open.php';
   $sql = 'SELECT
           page, page_en
           FROM contacts
-          WHERE rok = "'.$_SESSION['rok'].'" ORDER BY timestamp DESC LIMIT 1';
+          WHERE rok = "'.$_SESSION['rok'].'" ORDER BY timestamp LIMIT 1';
   $contacts = mysqli_query($conn, $sql);
 
   if (mysqli_num_rows($contacts) > 0) {

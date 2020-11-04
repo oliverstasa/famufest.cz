@@ -239,7 +239,7 @@ switch ($oblast){
                   echo '
                   <td>
                     ';
-                    if ($oblast == 'news' || $oblast == 'venue' || $oblast == 'partneri' || $oblast == 'partneri_kat') {
+                    if ($oblast == 'news' || $oblast == 'venue' || $oblast == 'partneri' || $oblast == 'partneri_kat' || $oblast == 'about' || $oblast == 'contact') {
 
                       $switcher = mysqli_query($conn, 'SELECT id, (SELECT id FROM '.$oblast.' WHERE id > '.$row['id'].' ORDER BY id LIMIT 1) AS id_prev, (SELECT id FROM '.$oblast.' WHERE id < '.$row['id'].' ORDER BY id DESC LIMIT 1) AS id_next FROM '.$oblast.' LIMIT 1');
                       $id = mysqli_fetch_assoc($switcher);
