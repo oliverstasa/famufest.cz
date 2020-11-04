@@ -22,7 +22,7 @@ function helfer($page, $cont = false) {
     case 'intro':
       $help = array(array('html' => '
       <img src=\'/data/help/h1.png\' style=\'width: 60vh;\'><br>
-      (!) Pokud kterákoli z nabídek není vyplněna žádným obsahem, nezobrazí se vůbec v menu (pokud není žádný program, nebude v menu tl. "program", pokud není žádné info "o festivalu", nebude v menu ani to tlačítko)<br>
+      (!) Pokud kterákoli z nabídek není vyplněna žádným obsahem, nezobrazí se vůbec v menu (pokud není žádný program, nebude v menu tl. \'program\', pokud není žádné info \'o festivalu\', nebude v menu ani to tlačítko)<br>
       <ul>
         <li><strong>2020 (YYYY)</strong> — přepíná administraci do požadovaného ročníku, tj. všechny akce v jednotlivých sekcích se ukládají do uvedeného ročníku</li>
         <li><strong>ROČNÍK</strong> — správa jednotlivých ročníků festivalu, přidává úvodní video, og:image a popisek v pr. dolním rohu</li>
