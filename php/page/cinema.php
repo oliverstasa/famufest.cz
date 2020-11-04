@@ -7,7 +7,7 @@ if ($_SESSION['kino'] > 0) {
 
   include '../sql_open.php';
 
-  $now = date('Y-m-d H:i:00', time());
+  $now = date('Y-m-d H:i:s', time());
   $sql = 'SELECT stream_link, nazev, nazev_en, cas_spusteni, cas_do
           FROM kino
           WHERE cas_od < "'.$now.'" AND cas_do > "'.$now.'"';

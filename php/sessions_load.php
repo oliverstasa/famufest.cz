@@ -36,11 +36,12 @@ if (session_status() == PHP_SESSION_NONE) {
 
       $time_enter = date('Y-m-d H:i:00', time()); // timestamp now
       $time_close = date('Y-m-d H:i:59', time()); // timestamp now:59
+      $ymdhis = date('Y-m-d H:i:s', time());
       $now = date('Y-m-d', time());
       $vcera = date('Y-m-d', strtotime("-1 days")); // včera
       $sql = 'SELECT (SELECT rok FROM rok WHERE active = 1) AS rok,
                      (SELECT typ_webu FROM settings WHERE cas_od < "'.$time_enter.'" AND cas_do > "'.$time_close.'" LIMIT 1) AS typ_webu,
-                     (SELECT COUNT(*) FROM kino WHERE cas_od < "'.$time_enter.'" AND cas_do > "'.$time_close.'") AS kino,
+                     (SELECT COUNT(*) FROM kino WHERE cas_od < "'.$ymdhis.'" AND cas_do > "'.$ymdhis.'") AS kino,
                      (SELECT COUNT(*)
                              FROM program
                              WHERE (typ = "blok" AND datum = "'.$vcera.'" AND (SELECT COUNT(*) FROM event WHERE embed <> "" AND id_blok IN (SELECT id_event FROM program WHERE typ = "blok" AND datum = "'.$vcera.'")) > 0)
@@ -50,7 +51,9 @@ if (session_status() == PHP_SESSION_NONE) {
       $d_sql = mysqli_query($conn, $sql);
       $datka = mysqli_fetch_assoc($d_sql);
 
-      $_SESSION['rok'] = $datka['rok']; // date('Y');
+      if (!isset($_SESSION['rok'])) {
+        $_SESSION['rok'] = $datka['rok']; // date('Y');
+      }
 
       // SET SESSIONS
           if ($datka['kino'] > 0) {

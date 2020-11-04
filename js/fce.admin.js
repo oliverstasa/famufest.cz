@@ -274,7 +274,7 @@ $('.video_form').submit(function(e) {
   var key = $(this).attr('key');
   form.find('video').remove();
   form.find('img.thumb').remove();
-  $('.video_form').append('<img class="thumb thumb_video" src="/data/img/loading.gif">');
+  form.append('<img class="thumb thumb_video" src="/data/img/loading.gif">');
 
   $.ajax({
           url: '/php/admin/uploadMp4.php?table='+table+'&key='+key+'&id='+id,
@@ -295,8 +295,8 @@ $('.video_form').submit(function(e) {
              break;
              default:
                 if (data) {
-                  $('.video_form img.thumb').remove();
-                  $('.video_form').append('<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'+data+'"></video>');
+                  form.find('img.thumb').remove();
+                  form.append('<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'+data+'"></video>');
                 } else {
                   alert('chyba v uložení souboru');
                 }
@@ -512,9 +512,33 @@ $("#db_form").submit(function(e){
 
 });
 
+// HELPER
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('click', '.help', function(e){
+
+    e.stopImmediatePropagation();
+
+    var html = $(this).attr('html'),
+        nazev = '[?] '+$(this).attr('nazev');
+
+        if ($('#helpvideo').find('h1').html() == nazev) {
+          $('#helpvideo').slideUp(500, function(){
+            $('#navod').html();
+            $('#helpvideo').find('h1').html('[?]');
+          });
+        } else {
+          $('#helpvideo').slideUp(500, function(){
+            $('#navod').html(html);
+            $('#helpvideo').find('h1').html(nazev);
+            $('#helpvideo').slideDown(500);
+          });
+        }
+
+});
+
 // V MENU ABY BYL ODKAZ NA ADMINISTRACI
 ////////////////////////////////////////////////////////////////////////////////
-$(document).ready(function (){
+$(document).ready(function(){
 
     if (!$('#menu_admin').length) {
       $('#menu').prepend('<li link="/admin" id="menu_admin" class="selected">ADMIN</li>');

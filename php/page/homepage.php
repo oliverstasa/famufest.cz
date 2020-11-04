@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include '../fce.php';
 
@@ -7,7 +8,7 @@ include '../fce.php';
 
     include '../sql_open.php';
 
-    $sql = 'SELECT thumb, video FROM rok WHERE active = 1 LIMIT 1';
+    $sql = 'SELECT thumb, video FROM rok WHERE rok = "'.$_SESSION['rok'].'" LIMIT 1';
     $ress = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($ress) > 0) {

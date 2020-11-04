@@ -6,6 +6,8 @@ session_start();
 if (isset($_SESSION['lord']) == true) {
 
   include '../sql_open.php';
+  include '../fce.php';
+  include '../fce.admin.php';
 
   if (isset($_GET['pg'])) {
 
@@ -14,6 +16,8 @@ if (isset($_SESSION['lord']) == true) {
 
     echo '
     <div id="admin_menu">
+    <div class="link'; if ($str == '') {echo ' selected';} echo '" link="/admin">ADMIN</div>
+    <div class="link" link="/admin/logout">ODHLÁSIT SE</div>
     <form id="rok_form">
     <select id="rok_select" from="/admin'.(isset($oblast)?'/'.$oblast:'').(isset($akce)?'/'.$akce:'').(isset($id)?'/'.$id:'').'">
     ';
@@ -51,7 +55,6 @@ if (isset($_SESSION['lord']) == true) {
     <div class="link'; if ($str == 'chat_names') {echo ' selected';} echo '" link="/admin/chat_names/show" id="m_chat">CHAT</div>
     <div class="link'; if ($str == 'settings') {echo ' selected';} echo '" link="/admin/settings/show" id="m_rezim">REŽIM</div>
     <div class="link'; if ($str == 'rok') {echo ' selected';} echo '" link="/admin/rok/show" id="m_rocnik">ROČNÍK</div>
-    <div class="link" link="/admin/logout">ODHLÁSIT SE</div>
     </div>
     ';
 
@@ -66,9 +69,30 @@ if (isset($_SESSION['lord']) == true) {
 
     } else {
 
+        echo '<h1>Návody</h1>';
+
+        helfer('intro');
+        helfer('event');
+        helfer('kategorie');
+        helfer('blok');
+        helfer('venue');
+        helfer('program');
+        //helfer('news');
+        //helfer('about');
+        helfer('contacts');
+        helfer('partneri');
+        helfer('partneri_kat');
+        helfer('kino');
+        helfer('chat_names');
+        helfer('settings');
+        helfer('rok', true);
+
         echo '
+        <!--
         <img src="/data/img/lasergirl_pixel.gif" style="max-width: 70vw;">
+        -->
         <br>
+        <div class="content">
         <h1>Kontakty</h1>
         <strong>Developer a webmaster</strong><br>
         &emsp;Oliver Staša
@@ -78,6 +102,7 @@ if (isset($_SESSION['lord']) == true) {
         &emsp;Filip Kopecký
         &emsp;abc@filipkopecky.com<br>
         &emsp;Po—Pá 8.00—18.00&emsp;+420 737 787 373
+        </div>
         ';
 
     }

@@ -1,5 +1,6 @@
 <?php
 include '../fce.php';
+include '../fce.admin.php';
 
 if (isset($page) && $_SESSION['lord'] === true) {
 
@@ -21,8 +22,10 @@ $id = isset($pg[4])?$pg[4]:false;
 echo '
 <div class="link'; if ($akce == 'show') {echo ' selected';} echo '" link="/admin/'.$oblast.'/show">👁 ZOBRAZIT</div>
 <div class="link'; if ($akce == 'add') {echo ' selected';} echo '" link="/admin/'.$oblast.'/add">♘ PŘIDAT</div>
-<!-- <div class="help" helpwith="'.$oblast.'">NÁVOD</div> -->
 ';
+
+helfer($oblast, true);
+
 
 echo '
 <div class="content" style="min-width: 60vh;">
@@ -189,7 +192,7 @@ switch ($oblast){
                       $res = $row[$key]?'✔':'⨯';
                     break;
                     case 'video':
-                      $thumb = $row[$key]?'<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'.$row[$key].'"></video>':'<img src="/data/img/upload.jpg" class="thumb">';
+                      $thumb = $row[$key]?'<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'.$row[$key].'"></video>':'<img src="/data/img/upload.jpg" class="thumb thumb_video">';
                       $res = '
                       <form class="video_form" fk_id="'.$row['id'].'" table="'.$oblast.'" key="'.$key.'">
                         '.$thumb.'
@@ -289,7 +292,7 @@ switch ($oblast){
 ////////////////////////////////////////////////////////////////////////////////
     case 'add': case 'edit':
 
-      $editor_descrip = '<br>FUNKCE EDITORU:<br><br>nový řádek v textu: [shift]+[enter]<br>ukončit blok: [enter] nebo kliknout na nový řádek<br>nový řádek tabulky: [enter] nebo (+) po najetí za poslední řádek<br>nová buňka: (+) po najetí ža poslední buňku<br><i>text@text.xy</i> se automaticky změní na odkaz<br>nabídka k vytvoření odkazu se zobrazí po vybrání textu<br>obrázek pouze .jpg';
+      $editor_descrip = '<br>FUNKCE EDITORU:<br>viz. [?] PRÁCE S EDITOREM<br>';
 
       switch ($oblast) {
         case 'rok':
@@ -304,9 +307,9 @@ switch ($oblast){
           $vals = array(
                     array('sql' => 'typ', 'name' => 'TYP', 'desc' => '', 'type' => 'select', 'values' => 'blok,event'),
                     array('sql' => 'online', 'name' => 'ONLINE', 'desc' => '', 'type' => 'select'),
-                    array('sql' => 'id_event1', 'name' => 'EVENT', 'desc' => 'film nebo událost', 'type' => 'select', 'fkey' => 'event'),
-                    array('sql' => 'id_event2', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok'),
-                    array('sql' => 'id_venue', 'name' => 'VENUE', 'desc' => '', 'type' => 'select', 'fkey' => 'venue'),
+                    array('sql' => 'id_event1', 'name' => 'EVENT', 'desc' => 'film nebo událost', 'type' => 'select', 'fkey' => 'event WHERE rok = "'.$_SESSION['rok'].'"'),
+                    array('sql' => 'id_event2', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok WHERE rok = "'.$_SESSION['rok'].'"'),
+                    array('sql' => 'id_venue', 'name' => 'VENUE', 'desc' => '', 'type' => 'select', 'fkey' => 'venue WHERE rok = "'.$_SESSION['rok'].'"'),
                     array('sql' => 'datum', 'name' => 'DATUM', 'desc' => '*datum, pod který den událost spadá', 'type' => 'date'),
                     array('sql' => 'zacatek', 'name' => 'ZAČÁTEK', 'desc' => '*čas začátku může být následující den<br>např. pokud "afterparty" začíná po půlnoci v 01:00, tak:<br>když DATUM je 2020-05-20 => ZAČÁTEK je 2020-05-21 01:00:00', 'type' => 'timestamp'),
                     array('sql' => 'konec', 'name' => 'KONEC', 'desc' => '', 'type' => 'timestamp')
@@ -316,7 +319,7 @@ switch ($oblast){
           $vals = array(
                     array('sql' => 'typ', 'name' => 'TYP', 'desc' => '', 'type' => 'select', 'values' => 'film,event'),
                     array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'select', 'fkey' => 'kategorie'),
-                    array('sql' => 'id_blok', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok'),
+                    array('sql' => 'id_blok', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok WHERE rok = "'.$_SESSION['rok'].'"'),
                     array('sql' => 'aramis', 'name' => 'ARAMISOVA CENA', 'desc' => '', 'type' => 'checkbox'),
                     array('sql' => 'delka', 'name' => 'DÉLKA', 'desc' => 'pouze číslo v minutách, zaokrouhleno', 'type' => 'txt'),
                     array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => '', 'type' => 'txt'),
@@ -358,7 +361,7 @@ switch ($oblast){
         break;
         case 'settings':
           $vals = array(
-                    array('sql' => 'typ_webu', 'name' => 'REŽIM', 'desc' => 'default => klasické konání festivalu<br>videotéka => filmy ve videotéce + default<br>kino => kino online + videotéka + default', 'type' => 'select'),
+                    array('sql' => 'typ_webu', 'name' => 'REŽIM', 'desc' => 'default => klasické konání festivalu<br>filmotéka => filmy ve videotéce + default', 'type' => 'select'),
                     array('sql' => 'cas_od', 'name' => 'SPUSTÍ SE', 'desc' => '', 'type' => 'timestamp'),
                     array('sql' => 'cas_do', 'name' => 'UKONČÍ SE', 'desc' => '', 'type' => 'timestamp')
                 );

@@ -4,18 +4,11 @@ session_start();
   // ZVOLI DEFAULT JAZYK POKUD NENI ZVOLEN JINY
   include './php/sessions_load.php';
 
-  // FUNKCE LANG()
+  // FUNKCE
   include './php/fce.php';
 
     // NAHRAJE HTML S JS
     include './php/document/layout.php';
-    /*
-    echo '
-    <meta charset="utf-8">
-    <h1>'.lang('OMLOUVÁME SE, PROBÍHÁ UPDATE WEBU', 'SORRY, WEBSITE IS BEING UPDATED').'</h1>
-    <p>00.00 - 23.59 12. 10. 2020</p>
-    ';
-    */
 
 /*
 DB

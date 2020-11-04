@@ -84,6 +84,9 @@ isset($uri)?'':session_start();
         case 'contact':
           $t .= ' — '.lang('KONTAKT', 'CONTACT');
         break;
+        case 'archive':
+          $t .= ' — '.lang('ARCHIV', 'ARCHIVE');
+        break;
       }
 
       if (isset($t_sql)) {

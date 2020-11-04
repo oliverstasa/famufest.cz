@@ -31,9 +31,11 @@
   include './php/sql_open.php';
 
   $now = date('Y-m-d', time());
+  $ymdhis = date('Y-m-d H:i:s', time());
   $vcera = date('Y-m-d', strtotime("-1 days"));
+  $rok = $_SESSION['rok'];
   $sql = 'SELECT
-          (SELECT COUNT(*) FROM program WHERE datum = "'.date('Y-m-d').'") AS program,
+          (SELECT COUNT(*) FROM program WHERE datum = "'.date('Y-m-d').'") AND rok = "'.$rok.'" AS program,
           (SELECT COUNT(*)
                   FROM program
                   WHERE (typ = "blok" AND online = "1" AND datum = "'.$vcera.'" AND (SELECT COUNT(*) FROM event WHERE embed <> "" AND id_blok IN (SELECT id_event FROM program WHERE typ = "blok" AND datum = "'.$vcera.'")) > 0)
@@ -43,15 +45,22 @@
           (SELECT COUNT(*) FROM event WHERE embed <> "") AS k_prehrani,
           (SELECT COUNT(*)
                   FROM kino
-                  WHERE cas_od < "'.$now.'" AND cas_do > "'.$now.'") AS kino,
-          (SELECT termin FROM rok WHERE active = 1) as termin,
+                  WHERE cas_od < "'.$ymdhis.'" AND cas_do > "'.$ymdhis.'") AS kino,
+          (SELECT termin FROM rok WHERE rok = "'.$rok.'") AS termin,
+          (SELECT COUNT(*) FROM event WHERE rok = "'.$rok.'" AND typ = "film") AS jsoufilmy,
+          (SELECT COUNT(*) FROM about WHERE rok = "'.$rok.'") AS ofestu,
+          (SELECT COUNT(*) FROM contacts WHERE rok = "'.$rok.'") AS kontakt,
+          (SELECT COUNT(*) FROM partneri WHERE rok = "'.$rok.'") AS partneri,
+          (SELECT COUNT(*) FROM news WHERE rok = "'.$rok.'") AS jsounovinky,
+          (SELECT COUNT(*) FROM program WHERE rok = "'.$rok.'") AS jeprogram,
+          (SELECT rok FROM rok WHERE active = 1) AS actrok,
           nazev, nazev_en, link
           FROM news ORDER BY id DESC LIMIT 1
           ';
   $day_ress = mysqli_query($conn, $sql);
   $def = mysqli_fetch_assoc($day_ress); // $jeden
 
-  if ($def['program'] != 0) { // $jeden['COUNT(*)']
+  if ($def['program'] != 0 && $def['actrok'] == $rok) { // $jeden['COUNT(*)']
     $link_program = '/programme/day/'.date('Y-m-d');
   } else {
     $link_program = '/programme/day/all';
@@ -67,7 +76,7 @@
     $rok_ress = mysqli_query($conn, $sql);
     if (mysqli_num_rows($rok_ress) > 0) {
       while ($roky = mysqli_fetch_assoc($rok_ress)) {
-        echo '<option value="'.$roky['rok'].'"'; if ($roky['rok'] == $_SESSION['rok']) {echo ' selected';} echo '>'.$roky['rok'].'</option>'; // date('Y')
+        echo '<option value="'.$roky['rok'].'"'; if ($roky['rok'] == $rok) {echo ' selected';} echo '>'.$roky['rok'].'</option>'; // date('Y')
       }
     }
 
@@ -91,16 +100,24 @@
   <ul id="menu"'; if ($uri != '/') {echo ' class="page"';} echo '>
     ';
 
-    if ($_SESSION['kino'] > 0 && $def['kino'] > 0) {echo '<li link="/live" class="live">'.lang('ŽIVĚ', 'LIVE').' <div class="toplay"></div></li>';}
-
+    if ($_SESSION['kino'] > 0 && $def['kino'] > 0) {
     echo '
-    <li link="'.$link_program.'" id="prg">'.lang('PROGRAM', 'PROGRAMME').'</li>
-    ';
+    <li link="/live" class="live">'.lang('ŽIVĚ', 'LIVE').' <div class="toplay"></div></li>';
+    }
+
+    if ($def['jeprogram'] != 0) {
+    echo '
+    <li link="'.$link_program.'" id="prg">'.lang('PROGRAM', 'PROGRAMME').'</li>';
+    }
+
 
     if ($_SESSION['filmoteka'] > 0 && $def['filmoteka'] > 0) {
       echo '<li link="/films/category/play-now" id="flm">'.lang('FILMOTÉKA', 'FILM LIBRARY').' <div class="toplay"></div></li>';
     } else {
-      echo '<li link="/films" id="flm">'.lang('FILMY', 'FILMS').'</li>';
+    if ($def['jsoufilmy'] != 0) {
+    echo '
+    <li link="/films" id="flm">'.lang('FILMY', 'FILMS').'</li>';
+    }
     }
 
     /*
@@ -108,31 +125,29 @@
     <!-- <li link="/visitors">'.lang('PRO NÁVŠTĚVNÍKY', 'FOR VISITORS').'</li> -->
     <!-- <li link="/places">'.lang('MÍSTA', 'PLACES').'</li> -->
 
-    */
-
-    echo '
-    <li link="/news">'.lang('NOVINKY', 'NEWS').'</li>
-    <li link="/about">'.lang('O FESTIVALU', 'FESTIVAL').'</li>
     <li link="/gallery">'.lang('GALERIE', 'GALLERY').'</li>
     <li class="go_read">'.lang('ČÍTÁRNA', 'READING ROOM').'</li>
-    <li link="/partners">'.lang('PARTNEŘI', 'PARTNERS').'</li>
-    <li link="/contact">'.lang('KONTAKTY', 'CONTACTS').'</li>
-    <!--
-    <li id="archive"><form><select id="archiverok">';
 
-    $sql = 'SELECT
-            rok
-            FROM rok
-            WHERE publikovano = 1
-            ORDER BY rok';
-    $roky = mysqli_query($conn, $sql);
+    */
 
-      while ($rok = mysqli_fetch_assoc($roky)) {
-        echo '<option value="'.$rok['rok'].'"'; if ($rok['rok'] == $_SESSION['rok']) {echo ' selected';} echo '>'.$rok['rok'].'</option>';
-      }
-
-    echo '</select></form>'.lang('ARCHIV', 'ARCHIVE').'</li>
-    -->
+    if ($def['jsounovinky'] > 0) {
+    echo '
+    <li link="/news">'.lang('NOVINKY', 'NEWS').'</li>';
+    }
+    if ($def['ofestu'] != 0) {
+    echo '
+    <li link="/about">'.lang('O FESTIVALU', 'FESTIVAL').'</li>';
+    }
+    if ($def['partneri'] != 0) {
+    echo '
+    <li link="/partners">'.lang('PARTNEŘI', 'PARTNERS').'</li>';
+    }
+    if ($def['kontakt'] != 0) {
+    echo '
+    <li link="/contact">'.lang('KONTAKTY', 'CONTACTS').'</li>';
+    }
+    echo '
+    <li link="/archive">'.lang('ARCHIV', 'ARCHIVE'); if ($def['actrok'] != $rok) {echo ' → '.$rok;} echo '</li>
     <li link="/lang">'.lang('EN', 'CZ').'</li>
   </ul>
 

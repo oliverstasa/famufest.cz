@@ -94,11 +94,21 @@ form {padding: 0; margin: 0;}
   .thumb_input, .video_input {display: none;}
   .thumb_form {text-align: center;}
 
-  .delete, .copyme, .changeyear, .entertits {font-size: 1.8vh; padding: 0.7vh 4vh 0.7vh 0.7vh; display: list-item; list-style: none; float: left; background-size: 200% 100%; background-image: linear-gradient(to right, var(--elem-color-inverse) 50%, var(--elem-color) 50%); transition: all 0.5s ease; color: var(--elem-color); margin-right: 1vh;}
+  .delete, .copyme, .changeyear, .entertits, .help {font-size: 1.8vh; padding: 0.7vh 4vh 0.7vh 0.7vh; display: list-item; list-style: none; float: left; background-size: 200% 100%; background-image: linear-gradient(to right, var(--elem-color-inverse) 50%, var(--elem-color) 50%); transition: all 0.5s ease; color: var(--elem-color); margin-right: 1vh;}
       .copyme, .changeyear, .entertits {padding-right: 0.7vh; background-image: linear-gradient(to right, #00CC66 50%, var(--elem-color) 50%);}
+      .help {background-image: linear-gradient(to right, gray 50%, var(--elem-color) 50%); margin-bottom: 1vh; color: black;}
     .copyme.ok {background: #000099; color: white;}
       .copyme.ok:hover {color: white;}
-    .delete:hover, .copyme:hover, .delete.selected, .changeyear:hover, .entertits:hover {background-position: 100% 0; cursor: pointer; color: var(--elem-color-inverse);}
+    .delete:hover, .copyme:hover, .delete.selected, .changeyear:hover, .entertits:hover, .help:hover {background-position: 100% 0; cursor: pointer; color: var(--elem-color-inverse);}
+
+    #helpvideo {width: 100%; float: left; display: none;}
+      #helpvideo img {max-width: 100%;}
+      #helpvideo #navod {width: 50%;}
+
+      #navod ul.arr {list-style: none;}
+      #navod ul > li {padding: 1vh 0;}
+      #navod ul.arr > li:before {content: "↓ ";}
+      #navod ul.arr > li:last-child:before {content: "⦿ ";}
 
   @keyframes wiggle_input {
       0%   {transform: translateX(-0.5vh);}

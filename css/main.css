@@ -31,11 +31,6 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
     #menu li.live.selected {background-size: 210% 100%; background-image: linear-gradient(to right, black 50%, red 50%); }
       #menu li.live.selected:hover {background-position: 97.5% 0;}
 
-  #archive {cursor: default !important; margin-left: -14vh;}
-    #archive.archiver {margin-left: 0vh;}
-    #archive form {float: left; margin-right: 3vh; margin-left: -4vh; background: var(--elem-color-inverse); margin-top: -0.63vh; margin-bottom: -0.63vh;}
-    #archive select {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 1.8vh; display: list-item; list-style: none; float: left; border: none; outline: none; margin-right: 1vh; font-family: regular, helvetica; width: 11vh; padding: 0.62vh 1vh; margin-left: 3vh;}
-
   #novinka {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 2.6vh; padding: 0.8vh 0.8vh 0.8vh 5vh; position: absolute; top: 93vh; left: 0; width: 100%; max-width: calc(100% - 65vh); z-index: 11; overflow: hidden; transition: all 0.3s ease;}
     #novinka .slider {animation: slider 20s linear infinite; animation-play-state: running; white-space: nowrap; overflow: hidden; position: relative; float: left;}
     #novinka .slider div {white-space: nowrap; display: table-cell;}
@@ -97,6 +92,9 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
             .blok:hover .toplay.night {background: url('/data/img/playbutton_black.png') center center no-repeat; background-size: contain;}
             .blok:hover .toplay.day, .toplay.night, .toplay.day {background: url('/data/img/playbutton_white.png') center center no-repeat; background-size: contain;}
 
+            .thisyear .nazev {color: red !important;}
+              .thisyear .delka {color: var(--elem-color-inverse) !important;}
+
   .news {width: 52vh; margin: 0vh 5vh 6vh 0vh;}
     .news .thumb {width: 100%; float: left; transition: all 0.25s ease;}
         .date {color: var(--elem-color-inverse); font-size: 1.5vh;}
@@ -129,6 +127,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
       .pg_normal .contenter {padding: 0 !important;}
       .pg_normal .content:last-child {padding-bottom: 12vh;}
     .pg_normal h1 {font-size: 1.8vh; padding: 0.7vh 5vh 0.7vh 0.7vh; background: var(--elem-color-inverse); color: var(--elem-color); width: auto; float: left; clear: both; margin-bottom: 1vh; font-family: regular, helvetica; z-index: 1;}
+    .pg_normal img {width: 50%; float: left; display: list-item; clear: both; padding-bottom: 3vh;}
       .cenova {border-collapse: collapse; width: 100%; margin: 2vh 0vh;}
       .cenova tr {border-bottom: 0.25vh solid var(--elem-color-inverse);}
       .cenova tr:first-child {border-top: 0.25vh solid var(--elem-color-inverse);}

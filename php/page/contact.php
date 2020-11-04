@@ -27,7 +27,9 @@ include '../sql_close.php';
 include '../document/lz.php';
 
 ?>
-<div class="content"><br></div>
-<h1><a href="/data/FAMUFEST-Privacy-Policy.pdf" target="_blank" style="color: white;">Terms of Use, Privacy Policy</a></h1>
+<div class="content">
+  <br>
+  <a href="/data/FAMUFEST-Privacy-Policy.pdf" target="_blank" style="color: white;">Terms of Use, Privacy Policy</a>
+</div>
 <div class="content"><br></div>
 </div>

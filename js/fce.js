@@ -5,6 +5,7 @@ $(document).on('touchstart', function(){});
 $(document).on('click touch', '#menu li, .link, .film, .news', function() {
 
     if ($('#hamburgr').is(':visible')) {$('#menu').slideUp();}
+    /*
     if ($(this).hasClass('go_read')) {
       window.open('https://showcase.dropbox.com/doc/FAMUFEST-36-CITARNA--A0L0jdhTGmu0w_qVjdVdJ0A7AQ-9l4gC3mAR4u1AqEwrgCd0', '_blank');
     } else if ($(this).hasClass('go_gallery')) {
@@ -12,6 +13,7 @@ $(document).on('click touch', '#menu li, .link, .film, .news', function() {
     } else if ($(this).hasClass('vstupenky')) {
       window.open('https://goout.net/cs/festivaly/famufest-36/vhbye/+kmqmo/', '_blank');
     }
+    */
 
   var url = $(this).attr('link');
   if (url && url.length && url != "#") {
@@ -175,17 +177,6 @@ function jazyk(cz, en) {
 
 }
 
-// ARCHIVAR
-////////////////////////////////////////////////////////////////////////////////
-$(document).on('mouseenter mouseleave', '#archive', function(){
-  $(this).toggleClass('archiver');
-});
-$("#archiverok").change(function(){
-  $.get('/php/admin/rok_switch.php?to='+$(this).val(), function(){
-    page('reload');
-  });
-});
-
 // EASTER EGGS
 ////////////////////////////////////////////////////////////////////////////////
 $('head').append('<script type="text/javascript" src="/js/easter.js"></script>');
@@ -268,6 +259,7 @@ function page(url) {
     /////////////
     case 'reload':
       window.location.reload();
+      break;
     break;
     /////////////
     case 'programme':
@@ -363,6 +355,19 @@ function page(url) {
     /////////////
     case 'contact':
       var file = '/php/page/contact.php';
+    break;
+    /////////////
+    case 'archive':
+      if (path[2] != null) {
+        $.post('/php/changeYear.php', {'rok': path[2]}, function(res){
+          if (res == 'ok') {
+            window.location.reload();
+          }
+        });
+        break; break;
+      } else {
+        var file = '/php/page/archive.php';
+      }
     break;
     /////////////
     case 'admin':

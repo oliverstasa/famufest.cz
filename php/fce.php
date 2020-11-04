@@ -140,18 +140,4 @@ function json2html($data, $typ) {
 
 }
 
-// helper
-////////////////////////////////////////////////////////////////////////////////
-function helfer($page) {
-
-  switch($page) {
-    case '': break;
-  }
-
-  for ($h = 0; $h < sizeof($types); $h++) {
-    $ress .= '<div class="help" helpwith="'.$types[$h].'">NÁVOD</div>';
-  }
-
-}
-
 ?>
