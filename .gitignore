@@ -3,3 +3,4 @@ js/editor/*
 js/editor_json/*
 famufest_2020.sql
 php/admin/login.php
+php/sql_open.php
