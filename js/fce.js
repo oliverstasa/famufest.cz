@@ -23,7 +23,9 @@ $(document).on('click touch', '#menu li, .link, .film, .news', function() {
     var url_rok = $(this).attr('rok'),
         rocnik = $('#ra'+url_rok);
     if (url_rok && url_rok.length) {
+      $('.link_list div').removeClass('selected');
       if (rocnik.is(':hidden')) {
+        $(this).addClass('selected');
         $('.archivni_rocnik:not(#ra+'+url_rok+')').slideUp();
         rocnik.slideDown();
       } else {

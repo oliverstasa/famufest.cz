@@ -95,7 +95,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
             .thisyear .nazev {color: red !important;}
               .thisyear .delka {color: var(--elem-color-inverse) !important;}
 
-  .news {width: 52vh; margin: 0vh 5vh 6vh 0vh;}
+  .news {width: 48vh; margin: 0vh 5vh 6vh 0vh;} /* 52vh */
     .news .thumb {width: 100%; float: left; transition: all 0.25s ease;}
         .date {color: var(--elem-color-inverse); font-size: 1.5vh;}
       .news .time {color: gray;}

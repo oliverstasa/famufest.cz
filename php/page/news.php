@@ -65,7 +65,7 @@ if (isset($_GET['n'])) {
   $sql = 'SELECT
           nazev, nazev_en, link, thumb, cas_od, time
           FROM news
-          WHERE rok = "'.$_SESSION['rok'].'" AND cas_od < "'.$now.'" ORDER BY cas_od DESC';
+          WHERE cas_od < "'.$now.'" ORDER BY cas_od DESC'; // WHERE rok = "'.$_SESSION['rok'].'" AND ...
   $all_news = mysqli_query($conn, $sql);
 
   if (mysqli_num_rows($all_news) > 0) {
