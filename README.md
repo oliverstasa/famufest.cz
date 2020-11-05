@@ -5,6 +5,7 @@ FAMUFEST je soutěžní festival kombinující projekce snímků studentů FAMU 
 
 # DEV TEAM
 programmer & coder: Oliver Staša
+
 design: Filip Kopecký, Emma Folprechtová
 
 
