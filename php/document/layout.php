@@ -16,11 +16,11 @@
     <meta name="viewport" content="width=device-width">
 
     <link rel="icon" href="/data/fav_<?php echo $_SESSION['daytime']; ?>.png">
-    <link href="/css/main.css?v=2.33" rel="stylesheet">
+    <link href="/css/main.css?v=2.34" rel="stylesheet">
     <link href="/css/<?php echo $_SESSION['daytime']; ?>.css" rel="stylesheet">
 
     <script src="/js/jq.js" type="text/javascript"></script>
-    <script src="/js/fce.js?v=2.21" type="text/javascript"></script>
+    <script src="/js/fce.js?v=2.31" type="text/javascript"></script>
 
     <?php include './php/og_image.php'; ?>
 

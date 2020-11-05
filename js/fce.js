@@ -18,6 +18,19 @@ $(document).on('click touch', '#menu li, .link, .film, .news', function() {
   var url = $(this).attr('link');
   if (url && url.length && url != "#") {
     page(url);
+  } else {
+    // pro pripad archivu
+    var url_rok = $(this).attr('rok'),
+        rocnik = $('#ra'+url_rok);
+    if (url_rok && url_rok.length) {
+      if (rocnik.is(':hidden')) {
+        $('.archivni_rocnik:not(#ra+'+url_rok+')').slideUp();
+        rocnik.slideDown();
+      } else {
+        rocnik.slideUp();
+      }
+
+    }
   }
 
 });
