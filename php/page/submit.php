@@ -21,7 +21,7 @@ include '../sql_open.php';
 
   } else {
 
-    echo '<h1>'.lang('NIC', 'EMPTY').'</h1>';
+    echo '<h1>'.lang('PŘIHLAŠOVÁNÍ UZAVŘENO', 'SUBMITION CLOSED').'</h1>';
 
   }
 
