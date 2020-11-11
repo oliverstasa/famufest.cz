@@ -81,6 +81,9 @@ isset($uri)?'':session_start();
         case 'partners':
           $t .= ' — '.lang('PARTNEŘI', 'PARTNERS');
         break;
+        case 'submit':
+          $t .= ' — '.lang('PŘIHLÁSIT DÍLO', 'SUBMIT WORK');
+        break;
         case 'contact':
           $t .= ' — '.lang('KONTAKT', 'CONTACT');
         break;

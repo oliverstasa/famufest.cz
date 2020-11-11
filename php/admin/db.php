@@ -110,6 +110,10 @@ switch ($oblast){
           $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('timestamp', 'ZMĚNĚNO'));
           $sql = 'SELECT id, page, page_en, timestamp FROM about WHERE rok = '.$_SESSION['rok'];
         break;
+        case 'entrypage':
+          $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('cas_od', 'ZAPNE SE'), array('cas_do', 'UZAVŘE SE'));
+          $sql = 'SELECT id, page, page_en, cas_od, cas_do FROM entrypage WHERE rok = '.$_SESSION['rok'];
+        break;
       }
 
       $ress = mysqli_query($conn, $sql.' ORDER BY id DESC');
@@ -318,14 +322,14 @@ switch ($oblast){
         case 'event':
           $vals = array(
                     array('sql' => 'typ', 'name' => 'TYP', 'desc' => '', 'type' => 'select', 'values' => 'film,event'),
-                    array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'select', 'fkey' => 'kategorie'),
+                    array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'select', 'fkey' => 'kategorie ORDER BY id DESC'),
                     array('sql' => 'id_blok', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok WHERE rok = "'.$_SESSION['rok'].'"'),
                     array('sql' => 'aramis', 'name' => 'ARAMISOVA CENA', 'desc' => '', 'type' => 'checkbox'),
                     array('sql' => 'delka', 'name' => 'DÉLKA', 'desc' => 'pouze číslo v minutách, zaokrouhleno', 'type' => 'txt'),
                     array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => '', 'type' => 'txt'),
                     array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => '', 'type' => 'txt'),
                     array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => 'typ:FILM => /films/ODKAZ<br>typ:EVENT => /events/ODKAZ', 'type' => 'txt'),
-                    array('sql' => 'embed', 'name' => 'VIMEO LINK', 'desc' => 've tvaru "https://vimeo.com/376880888"<br>*pokud je odkaz vyplněn, zobrazuje se ve videotéce<br>celý následující den po uvedení filmu v programu', 'type' => 'txt'),
+                    array('sql' => 'embed', 'name' => 'VIMEO/YOUTUBE LINK', 'desc' => 've tvaru "https://vimeo.com/376880888" apod.<br>*pokud je odkaz vyplněn, zobrazuje se ve videotéce<br>celý následující den po uvedení filmu v programu', 'type' => 'txt'),
                     array('sql' => 'geoblok', 'name' => 'GEOBLOK ČR', 'desc' => 'zaškrtnuto => pouze v ČR<br>nezaškrtnuto => worldwide', 'type' => 'checkbox'),
                     array('sql' => 'popis', 'name' => 'OBSAH [CZ]', 'desc' => '<br><div class="entertits">vložit štábovou šablonu</div><br><br><br>*pro automatické dublování pozic mezi CZ<=>EN<br>použij "....." (5× tečka[.]) mezi pozicí a jmény', 'type' => 'txtarea'),
                     array('sql' => 'popis_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'txtarea')
@@ -418,6 +422,14 @@ switch ($oblast){
                     array('sql' => 'page_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
                 );
         break;
+        case 'entrypage':
+          $vals = array(
+                    array('sql' => 'cas_od', 'name' => 'OTEVŘE SE', 'desc' => '*čas kdy se začně stránka zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'cas_do', 'name' => 'UZAVŘE SE', 'desc' => '*čas kdy se přestane stránka zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'page', 'name' => 'OBSAH [CZ]', 'desc' => $editor_descrip, 'type' => 'div'),
+                    array('sql' => 'page_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
+                );
+        break;
       }
 
       if (isset($id) && $akce == 'edit') {
@@ -452,7 +464,7 @@ switch ($oblast){
         </script>
         ';
 
-      } else if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts') {
+      } else if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage') {
 
         $editor_count = 1;
 
@@ -733,12 +745,13 @@ switch ($oblast){
       </form>
       ';
 
-      if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts') {
+      if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage') {
         echo '
         <script>
 
           function normalize(str) {
             str = str.replace(/’/g, "\'");
+            str = str.replace(/\\\"/g, "\'");
             str = str.replace(/\\\/g, "");
             str = str.replace(/=\"/g, "=");
             str = str.replace(/\">/g, ">");

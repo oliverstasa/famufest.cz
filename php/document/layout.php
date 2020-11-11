@@ -20,7 +20,7 @@
     <link href="/css/<?php echo $_SESSION['daytime']; ?>.css" rel="stylesheet">
 
     <script src="/js/jq.js" type="text/javascript"></script>
-    <script src="/js/fce.js?v=2.31" type="text/javascript"></script>
+    <script src="/js/fce.js?v=2.32" type="text/javascript"></script>
 
     <?php include './php/og_image.php'; ?>
 
@@ -46,6 +46,9 @@
           (SELECT COUNT(*)
                   FROM kino
                   WHERE cas_od < "'.$ymdhis.'" AND cas_do > "'.$ymdhis.'") AS kino,
+          (SELECT COUNT(*)
+                  FROM entrypage
+                  WHERE cas_od < "'.$ymdhis.'" AND cas_do > "'.$ymdhis.'" AND rok = "'.$rok.'") AS entrypage,
           (SELECT termin FROM rok WHERE rok = "'.$rok.'") AS termin,
           (SELECT COUNT(*) FROM event WHERE rok = "'.$rok.'" AND typ = "film") AS jsoufilmy,
           (SELECT COUNT(*) FROM about WHERE rok = "'.$rok.'") AS ofestu,
@@ -66,26 +69,6 @@
     $link_program = '/programme/day/all';
   }
 
-  /*
-  echo '
-  <div id="archiv">ARCHIV';
-
-  echo '<form id="rok"><select>';
-
-    $sql = 'SELECT rok FROM rok ORDER BY rok DESC';
-    $rok_ress = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($rok_ress) > 0) {
-      while ($roky = mysqli_fetch_assoc($rok_ress)) {
-        echo '<option value="'.$roky['rok'].'"'; if ($roky['rok'] == $rok) {echo ' selected';} echo '>'.$roky['rok'].'</option>'; // date('Y')
-      }
-    }
-
-  echo '</select></form>';
-
-  echo '</div>
-  ';
-  */
-
   if ($def['link']) {
     echo '
     <div class="link'; if ($uri != '/') {echo ' hidden';} echo '" id="novinka" link="/news/'.$def['link'].'">
@@ -96,6 +79,10 @@
     ';
   }
 
+  /*
+  MENU HERE
+  */
+
   echo '
   <ul id="menu"'; if ($uri != '/') {echo ' class="page"';} echo '>
     ';
@@ -103,6 +90,11 @@
     if ($_SESSION['kino'] > 0 && $def['kino'] > 0) {
     echo '
     <li link="/live" class="live">'.lang('ŽIVĚ', 'LIVE').' <div class="toplay"></div></li>';
+    }
+
+    if ($def['entrypage'] != 0) {
+    echo '
+    <li link="/submit">'.lang('PŘIHLÁSIT DÍLO', 'SUBMIT WORK').'</li>';
     }
 
     if ($def['jeprogram'] != 0) {
@@ -121,13 +113,10 @@
     }
 
     /*
-
     <!-- <li link="/visitors">'.lang('PRO NÁVŠTĚVNÍKY', 'FOR VISITORS').'</li> -->
     <!-- <li link="/places">'.lang('MÍSTA', 'PLACES').'</li> -->
-
     <li link="/gallery">'.lang('GALERIE', 'GALLERY').'</li>
     <li class="go_read">'.lang('ČÍTÁRNA', 'READING ROOM').'</li>
-
     */
 
     if ($def['jsounovinky'] > 0) {

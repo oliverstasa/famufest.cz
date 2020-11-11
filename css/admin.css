@@ -37,8 +37,8 @@ form {padding: 0; margin: 0;}
 #reloader {animation: flash 2s infinite;}
 #reloader:hover {animation: none;}
 
-  #m_novinky, #m_eventy, #m_kategorie, #m_bloky, #m_venues, #m_program, #m_kino, #m_chat, #m_rezim, #m_rocnik, #m_about, #m_kontakty, #m_partneri, #m_partneri_kat {color: white;}
-  #m_novinky, #m_about, #m_kontakty {background-image: linear-gradient(to right, #6699FF 50%, var(--elem-color) 50%);}
+  #m_novinky, #m_eventy, #m_kategorie, #m_bloky, #m_venues, #m_program, #m_kino, #m_chat, #m_rezim, #m_rocnik, #m_about, #m_kontakty, #m_partneri, #m_partneri_kat, #m_entrypage {color: white;}
+  #m_novinky, #m_about, #m_kontakty, #m_entrypage {background-image: linear-gradient(to right, #6699FF 50%, var(--elem-color) 50%);}
   #m_partneri, #m_partneri_kat {background-image: linear-gradient(to right, #CC88FF 50%, var(--elem-color) 50%);}
   #m_eventy, #m_kategorie {background-image: linear-gradient(to right, #FF6666 50%, var(--elem-color) 50%);}
   #m_program, #m_venues, #m_bloky {background-image: linear-gradient(to right, #00CC66 50%, var(--elem-color) 50%);}

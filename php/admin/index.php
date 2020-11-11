@@ -49,6 +49,7 @@ if (isset($_SESSION['lord']) == true) {
     <div class="link'; if ($str == 'news') {echo ' selected';} echo '" link="/admin/news/show" id="m_novinky">NOVINKY</div>
     <div class="link'; if ($str == 'about') {echo ' selected';} echo '" link="/admin/about/show" id="m_about">O FESTIVALU</div>
     <div class="link'; if ($str == 'contacts') {echo ' selected';} echo '" link="/admin/contacts/show" id="m_kontakty">KONTAKTY</div>
+    <div class="link'; if ($str == 'entrypage') {echo ' selected';} echo '" link="/admin/entrypage/show" id="m_entrypage">PŘIHLÁSIT DÍLO</div>
     <div class="link'; if ($str == 'partneri') {echo ' selected';} echo '" link="/admin/partneri/show" id="m_partneri">PARTNEŘI</div>
     <div class="link'; if ($str == 'partneri_kat') {echo ' selected';} echo '" link="/admin/partneri_kat/show" id="m_partneri_kat">KATEGORIE PARTNERŮ</div>
     <div class="link'; if ($str == 'kino') {echo ' selected';} echo '" link="/admin/kino/show" id="m_kino">KINO</div>
@@ -80,6 +81,7 @@ if (isset($_SESSION['lord']) == true) {
         //helfer('news');
         //helfer('about');
         helfer('contacts');
+        helfer('entrypage');
         helfer('partneri');
         helfer('partneri_kat');
         helfer('kino');

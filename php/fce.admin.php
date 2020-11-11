@@ -55,9 +55,9 @@ function helfer($page, $cont = false) {
         <li><strong>[PŘIDAT]</strong></li>
         <li><strong>V SEZNAMU ROČNÍKŮ</strong> se nahrávají následující data:
           <ul>
-            <li><strong>OG</strong> — obrázek pro sociální sítě, pouze formát .jpg</li>
-            <li><strong>BG/THUMB</strong> — pozadí webu pro mobilní zařízení na úvodní obrazovce, sloužící zároveň jako obrázek zobrazený před nahráním úvodního videa, pouze formát .jpg</li>
-            <li><strong>VIDEO</strong> — video na úvodní obrazovce webu, pouze formát .mp4, maximální doporučená velikost 10mb</li>
+            <li><strong>OG</strong> — obrázek pro sociální sítě, pouze formát .jpg => šířka 2048px, kvalita jpg:70+</li>
+            <li><strong>BG/THUMB</strong> — pozadí webu pro mobilní zařízení na úvodní obrazovce, sloužící zároveň jako obrázek zobrazený před nahráním úvodního videa, pouze formát .jpg => šířka 2048px, kvalita jpg:70+</li>
+            <li><strong>VIDEO</strong> — video na úvodní obrazovce webu, pouze formát .mp4, maximální doporučená velikost 10mb => formát: FHD, h264, 5mbps (upravit dle velioksti výstupu)</li>
           </ul>
         </li>
         <li><strong>ROČNÍK ZALOŽEN ✓</strong></li>
@@ -166,7 +166,7 @@ function helfer($page, $cont = false) {
             <li><strong>DÉLKA</strong> — délka filmu uvedena pouze v minutách, tzn. správně: \'14\', špatně: \'14.23\'</li>
             <li><strong>NÁZEV CZ/EN</strong> — pokud název bude vyplněn jen v jednom jazyce, vždyc se zobrazí pouze vyplněná verze, je ale nutno vyplnit název alespoň v jednom jazyce</li>
             <li><strong>ODKAZ</strong> — podle jaké adresy se bude dát na událost odkazovat: www.famufest.cz/(films/events)/[ODKAZ]</li>
-            <li><strong>VIMEO LINK</strong> — odkaz na přehrání filmu z FAMU VIMEO účtu - nutno vyplnit, aby šel film přehrát ve filmotéce</li>
+            <li><strong>VIMEO/YOUTUBE LINK</strong> — odkaz na přehrání filmu z FAMU VIMEO účtu - nutno vyplnit, aby šel film přehrát ve filmotéce, pokud nejde o FILM, ale o EVENT, bude video k přehrání online nevázaně na online program - k přehrání navždy (video může být i z YOUTUBE)</li>
             <li><strong>GEOBLOK ČR</strong> — pokud lze film přehrát online pouze pro uživatele uvnitř ČR, zaškrtnout</li>
             <li><strong>OBSAH CZ</strong> — popisek k události/filmu - pokud vyplňujete popisek k filmu, začněte vyplňovat ho česky, nejdříve popisek a poté na nový řádek pod popisek pro vložení štábu stiskněte tl. [vložit štábovou šablonu], vloží se základní šablona, která bude přepisovat pozice i do EN verze i s překladem = šetří čas</li>
             <li><strong>OBSAH EN</strong> — cokoli napíšete do této části se zpětně nepřepíše do CZ verze</li>
@@ -174,7 +174,7 @@ function helfer($page, $cont = false) {
           </ul>
         </li>
         <li><strong>[PŘIDAT]</strong></li>
-        <li><strong>SEZNAM EVENTŮ — NAHRÁT FOTKU</strong> — v seznamu eventů stačí kliknout na nahrávací ikonu v kolonce [THUMB] a nahrát fotku (ve formátu .jpg), tato fotka slouží jako OG:image pro soc. sítě při sdílení filmu a zobrazuje se jako background po rozkliknutí filmu</li>
+        <li><strong>SEZNAM EVENTŮ — NAHRÁT FOTKU</strong> — v seznamu eventů stačí kliknout na nahrávací ikonu v kolonce [THUMB] a nahrát fotku (ve formátu .jpg => šířka 2048px, kvalita jpg:70+), tato fotka slouží jako OG:image pro soc. sítě při sdílení filmu a zobrazuje se jako background po rozkliknutí filmu</li>
         <li><strong>EVENT PŘIDÁN ✓</strong></li>
       </ul>', 'name' => 'Tvorba událostí'));
     break;
@@ -230,7 +230,7 @@ function helfer($page, $cont = false) {
           </ul>
         </li>
         <li><strong>[PŘIDAT]</strong></li>
-        <li><strong>SEZNAM NOVINEK — NAHRÁT FOTKU</strong> — v seznamu novinek stačí kliknout na nahrávací ikonu v kolonce [THUMB] a nahrát fotku (ve formátu .jpg), tato fotka slouží jako OG:image pro soc. sítě při sdílení novinky a zobrazuje se jako background po rozkliknutí novinky</li>
+        <li><strong>SEZNAM NOVINEK — NAHRÁT FOTKU</strong> — v seznamu novinek stačí kliknout na nahrávací ikonu v kolonce [THUMB] a nahrát fotku (ve formátu .jpg => šířka 2048px, kvalita jpg:70+), tato fotka slouží jako OG:image pro soc. sítě při sdílení novinky a zobrazuje se jako background po rozkliknutí novinky</li>
         <li><strong>NOVINKA PŘIDÁNA ✓</strong></li>
       </ul>', 'name' => 'Tvorba novinky'), array('html' => $editor, 'name' => 'Práce s editorem'));
     break;
@@ -383,6 +383,23 @@ function helfer($page, $cont = false) {
         <li><strong>[PŘIDAT]</strong></li>
         <li><strong>VERZE STRÁNKY PŘIDÁNA ✓</strong></li>
       </ul>', 'name' => 'Stránka O FESTIVALU'), array('html' => $editor, 'name' => 'Práce s editorem'));
+    break;
+    case 'entrypage':
+      $help = array(array('html' => '
+      Stránka pro přihlašování filmů<br>
+      <ul class=\'arr\'>
+        <li><strong>[PŘIHLÁSIT DÍLO]</strong></li>
+        <li><strong>[PŘIDAT]</strong></li>
+        <li><strong>VYPLNIT</strong>:
+          <ul>
+            <li><strong>OTEVŘE SE</strong> — od kdy bude v menu položka zobrazena</li>
+            <li><strong>UZAVŘE SE</strong> — do kdy bude v menu položka zobrazena</li>
+            <li><strong>OBSAH</strong> — viz [[?] PRÁCE S EDITOREM]</li>
+          </ul>
+        </li>
+        <li><strong>[PŘIDAT]</strong></li>
+        <li><strong>VERZE STRÁNKY PŘIDÁNA ✓</strong></li>
+      </ul>', 'name' => 'Stránka PŘIHLAŠOVÁNÍ FILMŮ'), array('html' => $editor, 'name' => 'Práce s editorem'));
     break;
   }
 

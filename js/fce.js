@@ -352,16 +352,12 @@ function page(url) {
       var file = '/php/page/visitors.php';
     break;
     /////////////
-    case 'gallery':
-      var file = '/php/page/galery.php';
-    break;
-    /////////////
     case 'about':
       var file = '/php/page/about.php';
     break;
     /////////////
-    case 'places':
-      var file = '/php/page/places.php';
+    case 'submit':
+      var file = '/php/page/submit.php';
     break;
     /////////////
     case 'partners':

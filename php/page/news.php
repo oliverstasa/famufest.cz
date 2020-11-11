@@ -62,8 +62,9 @@ if (isset($_GET['n'])) {
 } else {
 
   $now = date('Y-m-d H:i:s', time());
+  $yearHolder = $_SESSION['rok'];
   $sql = 'SELECT
-          nazev, nazev_en, link, thumb, cas_od, time
+          nazev, nazev_en, link, thumb, cas_od, time, rok
           FROM news
           WHERE cas_od < "'.$now.'" ORDER BY cas_od DESC'; // WHERE rok = "'.$_SESSION['rok'].'" AND ...
   $all_news = mysqli_query($conn, $sql);
@@ -76,6 +77,13 @@ if (isset($_GET['n'])) {
             $thumb = '/data/up/s/'.$news['thumb'];
           } else {
             $thumb = '/data/img/default_'.$_SESSION['daytime'].'.jpg';
+          }
+
+          if ($yearHolder != $news['rok']) {
+
+            echo '<div class="link_list"><h1>'.$news['rok'].'</h1></div><br>';
+            $yearHolder = $news['rok'];
+
           }
 
           echo '
