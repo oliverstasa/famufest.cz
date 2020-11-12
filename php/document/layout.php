@@ -58,7 +58,7 @@
           (SELECT COUNT(*) FROM program WHERE rok = "'.$rok.'") AS jeprogram,
           (SELECT rok FROM rok WHERE active = 1) AS actrok,
           nazev, nazev_en, link
-          FROM news ORDER BY id DESC LIMIT 1
+          FROM news WHERE publikovano = 1 AND cas_od < "'.$ymdhis.'" ORDER BY cas_od DESC LIMIT 1
           ';
   $day_ress = mysqli_query($conn, $sql);
   $def = mysqli_fetch_assoc($day_ress); // $jeden
