@@ -1,7 +1,7 @@
 <?php
 isset($uri)?'':session_start();
 
-  $t = 'FAMUFEST — FILM FESTIVAL';
+  $t = 'FAMUFEST';
 
   if (isset($_GET['t']) || isset($uri)) {
 
@@ -15,10 +15,10 @@ isset($uri)?'':session_start();
     $tier = explode("/", $adr);
     if (sizeof($tier) > 0) {
 
-      $t = 'FAMUFEST';
-
       switch($tier[0]) {
-        default: case 'home': break;
+        default: case 'home':
+          $t .= ' — '.lang('FILMOVÝ FESTIVAL', 'FILM FESTIVAL');
+        break;
         case 'live':
           $t .= ' — '.lang('ŽIVĚ', 'LIVE');
         break;
