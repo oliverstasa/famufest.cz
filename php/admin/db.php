@@ -573,7 +573,7 @@ switch ($oblast){
                 if (isset($id) && $akce == 'edit' && $editing[$vals[$v]['sql']] != '') {
                 echo '
                 ,
-                data: '.str_replace(array("'"), array("’"), $editing[$vals[$v]['sql']]);
+                data: '.str_replace(array("'", "https:/", "http:/"), array('\"', "https://", "http://"), $editing[$vals[$v]['sql']]);
                 }
 
                 echo '

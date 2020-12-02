@@ -106,7 +106,7 @@ function json2html($data, $typ) {
     foreach ($data as $key=>$value){
       switch ($value['type']) {
         case 'paragraph':
-          $cntnt = str_replace(array('"’', '’"'), array("'", "'"), preg_replace('/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})/', '<a href="mailto:$1">$1</a>', $value['data']['text']));
+          $cntnt = str_replace(array('"’', '’"', "https:/", "http:/"), array("'", "'", "https://", "http://"), preg_replace('/([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})/', '<a href="mailto:$1">$1</a>', $value['data']['text']));
           if ($typ == 'page') {
             echo '<div class="content">'.$cntnt.'</div>';
           } else {
