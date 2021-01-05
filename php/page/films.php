@@ -8,6 +8,7 @@ echo '
 <div class="link_list">
 ';
 
+    $aramis = 0;
     $now = date('Y-m-d', time());
     $vcera = date('Y-m-d', strtotime("-1 days")); // včera
     $sql = 'SELECT DISTINCT id_kat,
@@ -15,6 +16,7 @@ echo '
                    (SELECT nazev_en FROM kategorie WHERE id = event.id_kat) AS nazev_en,
                    (SELECT link FROM kategorie WHERE id = event.id_kat) AS link,
                    (SELECT COUNT(*) FROM event WHERE typ = "event" AND embed <> "" AND rok = "'.$_SESSION['rok'].'") AS zaznamy,
+                   (SELECT COUNT(*) FROM event WHERE typ = "event" AND aramis = 1 AND rok = "'.$_SESSION['rok'].'") AS aramis,
                    (SELECT COUNT(*)
                            FROM program
                            WHERE (typ = "blok" AND online = "1" AND datum = "'.$vcera.'" AND (SELECT COUNT(*) FROM event WHERE embed <> "" AND id_blok IN (SELECT id_event FROM program WHERE typ = "blok" AND datum = "'.$vcera.'")) > 0)
@@ -78,6 +80,8 @@ echo '
             echo '
             <div class="link" link="'.$link.'">'.$nazev.'</div>';
 
+            $aramis = $cat['aramis'];
+
           }
 
         }
@@ -106,8 +110,12 @@ echo '
 
 include '../sql_close.php';
 
-echo '
-<div class="link" link="/films/category/aramis-price">'.lang('ARAMISOVA CENA', 'ARAMIS PRICE').'</div>';
+if ($aramis > 0) {
+
+  echo '
+  <div class="link" link="/films/category/aramis-price">'.lang('ARAMISOVA CENA', 'ARAMIS PRICE').'</div>';
+
+}
 
 if ($zaznamy == 1) {
   echo '

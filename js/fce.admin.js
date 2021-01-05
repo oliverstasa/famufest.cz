@@ -486,19 +486,26 @@ $("#db_form").submit(function(e){
     list = list+','+name+':'+'"'+val+'"';
   });
 
+  console.log(list);
+
   $.post('/php/admin/sql.php', {list: list, akce: akce, id: db_id}, function(res){
+
+    console.log(res);
+
     var ress = res.split('|');
     if (ress == 'done') {
       page('/admin/'+table+'/show');
     } else {
       switch (ress[0]) {
         case 'duplicate':
-          var chyby = ress[1].split(',');
+          var chyby = ress[1].split(','), all = '\n';
           $('input').removeClass('wrong');
           void $('input').width();
           $.each(chyby, function(index, value) {
             $('input[name="'+value+'"]').addClass('wrong');
+            all = all+'- '+value+'\n';
           });
+          alert('chyba - duplicitní zadání v poli: '+all);
         break;
         default: case 'error':
           alert('ERROR: '+ress);
