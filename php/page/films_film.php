@@ -12,6 +12,7 @@ $vcera = date('Y-m-d', strtotime("-1 days")); // včera
 if ($_GET['f'] == 'play-now') {
   $sql = 'SELECT
           nazev, nazev_en, thumb, popis, popis_en, delka, aramis, embed, geoblok,
+          (SELECT reklama FROM blok WHERE id = event.id_blok) AS reklama,
           (SELECT link FROM kategorie WHERE id = event.id_kat) AS link_kat
           FROM event
           WHERE typ = "film"
@@ -23,7 +24,7 @@ if ($_GET['f'] == 'play-now') {
                         AND ((online = "1" AND datum = "'.$vcera.'") > 0)
                             OR (online = "2" AND datum = "'.$now.'") > 0))';
 } else {
-  $sql = 'SELECT nazev, nazev_en, thumb, popis, popis_en, delka, aramis, embed, geoblok, (SELECT link FROM kategorie WHERE id = event.id_kat) AS link_kat FROM event WHERE typ = "film" AND link = "'.$_GET['f'].'"';
+  $sql = 'SELECT nazev, nazev_en, thumb, popis, popis_en, delka, aramis, embed, geoblok, (SELECT reklama FROM blok WHERE id = event.id_blok) AS reklama, (SELECT link FROM kategorie WHERE id = event.id_kat) AS link_kat FROM event WHERE typ = "film" AND link = "'.$_GET['f'].'"';
 }
 $filmy = mysqli_query($conn, $sql);
 
@@ -66,7 +67,20 @@ if (mysqli_num_rows($filmy) > 0) {
                   window.location.reload();
                 }, '.($do_konce+9000*1000).'); // 9000s=>15min tolerance
               </script>
-              <table class="film_embed"><tr><td>';
+
+              ';
+              
+              if ($film['reklama']) {
+                echo '<div id="playlist" class="profilm">
+                      <div id="playPlaylist" class="profilm">
+                        <div class="playText"><div class="playBtn"></div><br>'.lang('PŘEHRÁT FILM', 'PLAY FILM').'</div>
+                      </div>
+                      <div class="showreelFilmu profilm" style="background: url(\'/data/up/s/'.$film['thumb'].'\') no-repeat center center; background-size: cover;"></div>
+                      <iframe src="/data/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+                      <div class="ffspot"><video autoplay id="spotik"><source src="/data/up/'.$film['reklama'].'" type="video/mp4"></video></div>';
+              }
+              
+              echo '<table class="film_embed'; if ($film['reklama']) {echo ' vimeoPlaylist';} echo '"><tr><td>';
 
                 // POKUD YOUTUBE
                 if (strpos($film['embed'], 'youtube') !== false || strpos($film['embed'], 'youtu.be') !== false) {
@@ -103,6 +117,10 @@ if (mysqli_num_rows($filmy) > 0) {
 
                 } else {
                   echo lang('CHYBA PŘI NAČÍTÁNÍ VIDEA', 'ERROR OCCURED WHILE LOADING VIDEO');
+                }
+
+                if ($film['reklama']) {
+                  echo '</div>';
                 }
 
               echo '
@@ -267,7 +285,8 @@ if (mysqli_num_rows($filmy) > 0) {
           <div class="link" link="'.$link_venue.'">'.lang($den['nazev'], $den['nazev_en']).'</div>
           <div class="link" link="'.$link_blok.'">'.$blok_zkr.$cas_zacatek.'—'.$cas_konec.'</div>
           <div class="link" link="'.$link_day.'">'.$day.' '.$day_date.'</div>
-        </div>';
+        </div>
+        <br><br><br>';
 
     }
 

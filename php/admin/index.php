@@ -41,12 +41,16 @@ if (isset($_SESSION['lord']) == true) {
     echo '
     </select>
     </form>
-    <div class="link'; if ($str == 'event') {echo ' selected';} echo '" link="/admin/event/show" id="m_eventy">EVENTY</div>
+    <br><br><br><br>
+    <div class="link'; if ($str == 'event') {echo ' selected';} echo '" link="/admin/event/show" id="m_eventy">FILMY/EVENTY</div>
     <div class="link'; if ($str == 'kategorie') {echo ' selected';} echo '" link="/admin/kategorie/show" id="m_kategorie">KATEGORIE FILMŮ</div>
     <div class="link'; if ($str == 'blok') {echo ' selected';} echo '" link="/admin/blok/show" id="m_bloky">BLOKY</div>
     <div class="link'; if ($str == 'venue') {echo ' selected';} echo '" link="/admin/venue/show" id="m_venues">VENUES</div>
     <div class="link'; if ($str == 'program') {echo ' selected';} echo '" link="/admin/program/show" id="m_program">PROGRAM</div>
+    <div class="link'; if ($str == 'donate') {echo ' selected';} echo '" link="/admin/donate/show" id="m_donate">VSTUPENKY</div>
+    <div class="link'; if ($str == 'lista') {echo ' selected';} echo '" link="/admin/lista/show" id="m_lista">TEXT POD PROGRAM</div>
     <div class="link'; if ($str == 'news') {echo ' selected';} echo '" link="/admin/news/show" id="m_novinky">NOVINKY</div>
+    <div class="link'; if ($str == 'mag') {echo ' selected';} echo '" link="/admin/mag/show" id="m_magazin">MAGAZÍN</div>
     <div class="link'; if ($str == 'about') {echo ' selected';} echo '" link="/admin/about/show" id="m_about">O FESTIVALU</div>
     <div class="link'; if ($str == 'contacts') {echo ' selected';} echo '" link="/admin/contacts/show" id="m_kontakty">KONTAKTY</div>
     <div class="link'; if ($str == 'entrypage') {echo ' selected';} echo '" link="/admin/entrypage/show" id="m_entrypage">PŘIHLÁSIT DÍLO</div>
@@ -54,6 +58,7 @@ if (isset($_SESSION['lord']) == true) {
     <div class="link'; if ($str == 'partneri_kat') {echo ' selected';} echo '" link="/admin/partneri_kat/show" id="m_partneri_kat">KATEGORIE PARTNERŮ</div>
     <div class="link'; if ($str == 'kino') {echo ' selected';} echo '" link="/admin/kino/show" id="m_kino">KINO</div>
     <div class="link'; if ($str == 'chat_names') {echo ' selected';} echo '" link="/admin/chat_names/show" id="m_chat">CHAT</div>
+    <div class="link'; if ($str == 'pages') {echo ' selected';} echo '" link="/admin/pages/show" id="m_pages">STRÁNKY</div>
     <div class="link'; if ($str == 'settings') {echo ' selected';} echo '" link="/admin/settings/show" id="m_rezim">REŽIM</div>
     <div class="link'; if ($str == 'rok') {echo ' selected';} echo '" link="/admin/rok/show" id="m_rocnik">ROČNÍK</div>
     </div>

@@ -43,8 +43,8 @@ if ($_SESSION['lord'] === true) {
   // VYJIMKY
   //////////////////////////////////////////////////////////////////////////////
       } else if ($key != 'table' && $key != 'id_blok' && $key != 'id_kat' && $key !='delka' && $key != 'stream_link' && $key != 'geoblok' &&
-                 $key != 'typ' && $key != 'active' && $key != 'aramis' && $key != 'color' && $key != 'typ_webu' && $key != 'online' &&
-                 $key != 'publikovano' && $key != 'popis' && $key != 'popis_en' && $key != 'cas_od' && $key != 'cas_do') {
+                 $key != 'typ' && $key != 'active' && $key != 'aramis' && $key != 'color' && $key != 'typ_webu' && $key != 'online' && $key !='zkr' &&
+                 $key != 'publikovano' && $key != 'popis' && $key != 'popis_en' && $key != 'cas_od' && $key != 'cas_do' && $key != 'soutez' && $key != 'lista') {
         if ($val) {
           array_push($sql_tester, '(SELECT COUNT(*) FROM '.$params['table'].' WHERE '.$key.' = "'.$val.'"'.$control.') AS '.$key);
         }
@@ -101,7 +101,7 @@ if ($_SESSION['lord'] === true) {
           }
         }
 
-        if ($params['table'] == 'rok' || $params['table'] == 'settings' || $params['table'] == 'kategorie' || $params['table'] == 'kino' || $params['table'] == 'partneri_kat') {
+        if ($params['table'] == 'rok' || $params['table'] == 'settings' || $params['table'] == 'kategorie' || $params['table'] == 'kino' || $params['table'] == 'pages' || $params['table'] == 'partneri_kat' || $params['table'] == 'lista') {
           $sql = 'INSERT INTO '.$params['table'].'('.implode(", ", $insert_names).') VALUES ('.implode(", ", $insert_values).')';
         } else {
           $sql = 'INSERT INTO '.$params['table'].'('.implode(", ", $insert_names).', rok) VALUES ('.implode(", ", $insert_values).', '.$_SESSION['rok'].')';

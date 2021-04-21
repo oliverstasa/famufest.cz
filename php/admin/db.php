@@ -63,20 +63,24 @@ switch ($oblast){
           $sql = 'SELECT id, typ, id_event, (SELECT nazev FROM venue WHERE id = program.id_venue) AS venue, datum, zacatek, konec, online FROM program WHERE rok = '.$_SESSION['rok'];
         break;
         case 'event':
-          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('typ', 'TYP'), array('blok', 'BLOK'), array('kat', 'KATEGORIE'), array('embed', 'VIDEO'), array('thumb', 'THUMB (.jpg)'));
-          $sql = 'SELECT rok, id, (SELECT zkr FROM blok WHERE id = event.id_blok) AS blok, (SELECT nazev FROM kategorie WHERE id = event.id_kat) AS kat, typ, link, nazev, nazev_en, popis, popis_en, thumb, aramis, embed, geoblok FROM event WHERE rok = '.$_SESSION['rok'];
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('typ', 'TYP'), array('blok', 'BLOK'), array('id_katr', 'KATEGORIE'), array('embed', 'VIDEO'), array('thumb', 'THUMB (.jpg)'));
+          $sql = 'SELECT rok, id, (SELECT zkr FROM blok WHERE id = event.id_blok) AS blok, id_kat AS id_katr, typ, link, nazev, nazev_en, popis, popis_en, thumb, aramis, embed, geoblok FROM event WHERE rok = '.$_SESSION['rok'];
         break;
         case 'blok':
-          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('zkr', 'ZKRATKA'));
-          $sql = 'SELECT id, zkr, nazev, nazev_en FROM blok WHERE rok = '.$_SESSION['rok'];
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('zkr', 'ZKRATKA'), array('podcast', 'PODCAST'), array('playlist', 'PLAYLIST'), array('reklama', 'REKLAMA (.mp4)'));
+          $sql = 'SELECT id, zkr, nazev, nazev_en, podcast, playlist, reklama FROM blok WHERE rok = '.$_SESSION['rok'];
         break;
         case 'venue':
           $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'), array('color', 'BARVA'));
           $sql = 'SELECT id, nazev, nazev_en, color FROM venue WHERE rok = '.$_SESSION['rok'];
         break;
         case 'news':
-          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'),  array('publikovano', 'STAV'), array('cas_od', 'OD'), array('thumb', 'THUMB (.jpg)'));
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'),  array('publikovano', 'PUBLIKOVÁNO'), array('cas_od', 'OD'), array('thumb', 'THUMB (.jpg)'));
           $sql = 'SELECT id, nazev, nazev_en, publikovano, cas_od, thumb FROM news WHERE rok = '.$_SESSION['rok'];
+        break;
+        case 'mag':
+          $names = array(array('nazev', 'NÁZEV [CZ]'), array('nazev_en', 'NÁZEV [EN]'),  array('publikovano', 'PUBLIKOVÁNO'), array('cas_od', 'OD'), array('thumb', 'THUMB (.jpg)'));
+          $sql = 'SELECT id, nazev, nazev_en, publikovano, cas_od, thumb FROM mag WHERE rok = '.$_SESSION['rok'];
         break;
         case 'settings':
           $names = array(array('typ_webu', 'REŽIM'), array('cas_od', 'SPUSTÍ SE'), array('cas_do', 'UKONČÍ SE'));
@@ -88,11 +92,15 @@ switch ($oblast){
         break;
         case 'chat_names':
           $names = array(array('name', 'JMÉNO'), array('hash', 'ODKAZ'));
-          $sql = 'SELECT id, name, hash FROM chat_names WHERE rok = '.$_SESSION['rok'];
+          $sql = 'SELECT id, name, hash FROM chat_names';
         break;
         case 'kategorie':
           $names = array(array('nazev', 'NÁZEV'), array('nazev_en', 'NÁZEV [EN]'));
           $sql = 'SELECT id, nazev, nazev_en FROM kategorie';
+        break;
+        case 'pages':
+          $names = array(array('nazev', 'NÁZEV V MENU [CZ]'), array('nazev_en', '[EN]'), array('cas_od', 'OD'), array('cas_do', 'DO'), array('obsah', 'OBSAH [CZ]'), array('obsah_en', '[EN]'), array('publikovano', 'PUBLIKOVÁNO'), array('thumb', 'THUMB (.jpg)'));
+          $sql = 'SELECT id, nazev, nazev_en, cas_od, cas_do, obsah, obsah_en, publikovano, thumb FROM pages';
         break;
         case 'partneri':
           $names = array(array('logo', 'LOGO (celobílé transparentní .png)'), array('nazev', 'PARTNER'), array('odkaz', 'ODKAZ'), array('kategorie', 'KATEGORIE'));
@@ -109,6 +117,14 @@ switch ($oblast){
         case 'about':
           $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('timestamp', 'ZMĚNĚNO'));
           $sql = 'SELECT id, page, page_en, timestamp FROM about WHERE rok = '.$_SESSION['rok'];
+        break;
+        case 'lista':
+          $names = array(array('lista', 'TEXT [CZ]'), array('lista_en', 'TEXT [EN]'), array('cas_od', 'OD'), array('cas_do', 'DO'));
+          $sql = 'SELECT id, lista, lista_en, cas_od, cas_do FROM lista';
+        break;
+        case 'donate':
+          $names = array(array('nazev', 'TEXT [CZ]'), array('nazev_en', 'TEXT [EN]'), array('odkaz', 'ODKAZ'), array('cas_od', 'OD'), array('cas_do', 'DO'));
+          $sql = 'SELECT id, nazev, nazev_en, odkaz, cas_od, cas_do FROM donate WHERE rok = '.$_SESSION['rok'];
         break;
         case 'entrypage':
           $names = array(array('page', 'STRÁNKA [CZ]'), array('page_en', 'STRÁNKA [EN]'), array('cas_od', 'ZAPNE SE'), array('cas_do', 'UZAVŘE SE'));
@@ -167,16 +183,35 @@ switch ($oblast){
                       </form>';
                     break;
                     case 'active':
-                      $res = $row[$key]?'[AKTIVNÍ, zobrazuje se]':'<div class="changeyear" to="'.$row['id'].'">[AKTIVOVAT]</div>';
+                      $res = $row[$key]?'[AKTIVNÍ]':'<div class="changeyear" to="'.$row['id'].'">[AKTIVOVAT]</div>';
                     break;
                     case 'color':
                       $res = '<div class="color" style="background: #'.$row[$key].'"></div>';
                     break;
+                    /*
                     case 'publikovano':
-                      $res = $row[$key]?'PUBLIKOVÁNO':'SKRYTO';
+                      $res = $row[$key]?'✔':'⨯';
                     break;
-                    case 'kat':
-                      $res = $row[$key];
+                    */
+                    case 'id_katr':
+
+                      $usek = substr($row[$key], 1, -1);
+                      $kats = explode('||', $usek);
+                      $resss = array();
+
+                      if (count($kats)) {
+                        for ($ku = 0; $ku < count($kats); $ku++) {    
+                          $katr = mysqli_query($conn, 'SELECT nazev FROM kategorie WHERE id = '.$kats[$ku]);
+                          $nazev = mysqli_fetch_assoc($katr);
+                          array_push($resss, $nazev['nazev']);
+                        }
+                        $res = implode('<br>', $resss);
+                      } else {
+                        $katr = mysqli_query($conn, 'SELECT nazev FROM kategorie WHERE id = '.$kats[$ku]);
+                        $nazev = mysqli_fetch_assoc($katr);
+                        $res = $nazev['nazev'];
+                      }
+
                       if ($row['aramis'] == 1) {
                         $res = $res.' + ARAMIS';
                       }
@@ -192,10 +227,10 @@ switch ($oblast){
                     case 'typ':
                       $res = strtoupper($row[$key]);
                     break;
-                    case 'stream_link': case 'page': case 'page_en': case 'odkaz':
+                    case 'stream_link': case 'page': case 'page_en': case 'odkaz': case 'termin': case 'obsah': case 'obsah_en': case 'publikovano': case 'playlist': case 'podcast': case 'lista_en':
                       $res = $row[$key]?'✔':'⨯';
                     break;
-                    case 'video':
+                    case 'video': case 'reklama':
                       $thumb = $row[$key]?'<video class="thumb thumb_video" autoplay muted loop><source src="/data/up/'.$row[$key].'"></video>':'<img src="/data/img/upload.jpg" class="thumb thumb_video">';
                       $res = '
                       <form class="video_form" fk_id="'.$row['id'].'" table="'.$oblast.'" key="'.$key.'">
@@ -243,7 +278,7 @@ switch ($oblast){
                   echo '
                   <td>
                     ';
-                    if ($oblast == 'news' || $oblast == 'venue' || $oblast == 'partneri' || $oblast == 'partneri_kat' || $oblast == 'about' || $oblast == 'contact') {
+                    if ($oblast == 'news' || $oblast == 'mag' || $oblast == 'venue' || $oblast == 'partneri' || $oblast == 'partneri_kat' || $oblast == 'about' || $oblast == 'contact') {
 
                       $switcher = mysqli_query($conn, 'SELECT id, (SELECT id FROM '.$oblast.' WHERE id > '.$row['id'].' AND rok = '.$_SESSION['rok'].' ORDER BY id LIMIT 1) AS id_prev, (SELECT id FROM '.$oblast.' WHERE id < '.$row['id'].' AND rok = '.$_SESSION['rok'].' ORDER BY id DESC LIMIT 1) AS id_next FROM '.$oblast.' LIMIT 1');
                       $id = mysqli_fetch_assoc($switcher);
@@ -259,13 +294,15 @@ switch ($oblast){
 
                     }
 
-                    if (($oblast == 'kategorie' && $row['id'] > 7) || $oblast != 'kategorie') {
+                    echo '<div class="link" link="/admin/'.$oblast.'/edit/'.$row['id'].'">✎</div>';
+                    if (/* ($oblast == 'kategorie' && $row['id'] > 7) || */ $oblast != 'kategorie') {
                     echo '
-                    <div class="link" link="/admin/'.$oblast.'/edit/'.$row['id'].'">✎</div>
                     <div class="delete" link="/admin/'.$oblast.'/delete/'.$row['id'].'">🗑</div>';
-                    } else {
+                    } /*
+                    else {
                     echo '-';
                     }
+                    */
 
                     echo '
                   </td>
@@ -322,8 +359,9 @@ switch ($oblast){
         case 'event':
           $vals = array(
                     array('sql' => 'typ', 'name' => 'TYP', 'desc' => '', 'type' => 'select', 'values' => 'film,event'),
-                    array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'select', 'fkey' => 'kategorie ORDER BY id DESC'),
+                    array('sql' => 'id_kat', 'name' => 'KATEGORIE', 'desc' => '', 'type' => 'checkbox', 'fkey' => 'kategorie ORDER BY id DESC'),
                     array('sql' => 'id_blok', 'name' => 'BLOK', 'desc' => '', 'type' => 'select', 'fkey' => 'blok WHERE rok = "'.$_SESSION['rok'].'"'),
+                    array('sql' => 'soutez', 'name' => 'REŽIM', 'desc' => '-/soutěž/nesoutěž', 'type' => 'select'),
                     array('sql' => 'aramis', 'name' => 'ARAMISOVA CENA', 'desc' => '', 'type' => 'checkbox'),
                     array('sql' => 'delka', 'name' => 'DÉLKA', 'desc' => 'pouze číslo v minutách, zaokrouhleno', 'type' => 'txt'),
                     array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => '', 'type' => 'txt'),
@@ -340,7 +378,9 @@ switch ($oblast){
                     array('sql' => 'zkr', 'name' => 'ZKRATKA', 'desc' => 'A1', 'type' => 'txt'),
                     array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => $_SESSION['rok'].'-A1 =><br>/programme/block/'.$_SESSION['rok'].'-A1', 'type' => 'txt'),
                     array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => 'ANIMOVANÉ FILMY 1', 'type' => 'txt'),
-                    array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => 'ANIMATED FILMS 1', 'type' => 'txt')
+                    array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => 'ANIMATED FILMS 1', 'type' => 'txt'),
+                    array('sql' => 'podcast', 'name' => 'SOUNDCLOUD PODCAST', 'desc' => 'odkaz na soundclound<br>tzn. https://soundcloud.com/xyz', 'type' => 'txt'),
+                    array('sql' => 'playlist', 'name' => 'VIMEO PLAYLIST', 'desc' => 'odkaz na playlist z vimea<br>tzn. https://vimeo.com/showcase/8293897', 'type' => 'txt')
                   );
         break;
         case 'venue':
@@ -363,11 +403,34 @@ switch ($oblast){
                     array('sql' => 'obsah_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
                 );
         break;
+        case 'mag':
+          $vals = array(
+                    array('sql' => 'publikovano', 'name' => 'PUBLIKOVANO', 'desc' => 'povolení zobrazovat se', 'type' => 'checkbox'),
+                    array('sql' => 'cas_od', 'name' => 'OD KDY', 'desc' => 'zobrazí se od tohoto času', 'type' => 'timestamp'),
+                    array('sql' => 'nazev', 'name' => 'NÁZEV [CZ]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'nazev_en', 'name' => 'NÁZEV [EN]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => $_SESSION['rok'].'-CLANEK =><br>/mag/'.$_SESSION['rok'].'-CLANEK', 'type' => 'txt'),
+                    array('sql' => 'obsah', 'name' => 'OBSAH [CZ]', 'desc' => '', 'type' => 'div'),
+                    array('sql' => 'obsah_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
+                );
+        break;
         case 'settings':
           $vals = array(
                     array('sql' => 'typ_webu', 'name' => 'REŽIM', 'desc' => 'default => klasické konání festivalu<br>filmotéka => filmy ve videotéce + default', 'type' => 'select'),
                     array('sql' => 'cas_od', 'name' => 'SPUSTÍ SE', 'desc' => '', 'type' => 'timestamp'),
                     array('sql' => 'cas_do', 'name' => 'UKONČÍ SE', 'desc' => '', 'type' => 'timestamp')
+                );
+        break;
+        case 'pages':
+          $vals = array(
+                    array('sql' => 'publikovano', 'name' => 'PUBLIKOVANO', 'desc' => 'povolení zobrazovat se', 'type' => 'checkbox'),
+                    array('sql' => 'cas_od', 'name' => 'ZOBRAZÍ SE', 'desc' => '', 'type' => 'timestamp'),
+                    array('sql' => 'cas_do', 'name' => 'SKRYJE SE', 'desc' => '', 'type' => 'timestamp'),
+                    array('sql' => 'nazev', 'name' => 'NÁZEV V MENU [CZ]', 'desc' => 'optimal 5-8 znaků, max 15 znaků', 'type' => 'txt'),
+                    array('sql' => 'nazev_en', 'name' => 'NÁZEV V MENU [EN]', 'desc' => 'optimal 5-8 znaků, max 15 znaků', 'type' => 'txt'),
+                    array('sql' => 'link', 'name' => 'ODKAZ', 'desc' => $_SESSION['rok'].'-COVID-19 =><br>/p/'.$_SESSION['rok'].'-COVID-19', 'type' => 'txt'),
+                    array('sql' => 'obsah', 'name' => 'OBSAH [CZ]', 'desc' => '', 'type' => 'div'),
+                    array('sql' => 'obsah_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
                 );
         break;
         case 'kino':
@@ -379,8 +442,8 @@ switch ($oblast){
                     <br><br><strong>✔ YOUTUBE</strong>:<li>https://www.youtube.com/watch?v=XS088Opj9o0</li><li>https://youtu.be/XS088Opj9o0</li>
                     <strong>✔ FACEBOOK</strong>:<li>https://www.facebook.com/highedition/videos/2661865314036684/</li><li>https://www.facebook.com/watch/?v=275630553121328</li>
                     <strong>✔ VIMEO</strong>:<li>https://vimeo.com/376880888</li>', 'type' => 'txt'),
-                    array('sql' => 'cas_spusteni', 'name' => 'ZAPNE SE', 'desc' => '*čas zveřejnění streamu', 'type' => 'timestamp'),
-                    array('sql' => 'cas_od', 'name' => 'ZPŘÍSTUPNÍ SE', 'desc' => '*čas oveření KINO místnosti', 'type' => 'timestamp'),
+                    array('sql' => 'cas_spusteni', 'name' => 'ZAPNE SE STREAM', 'desc' => '*čas zveřejnění streamu', 'type' => 'timestamp'),
+                    array('sql' => 'cas_od', 'name' => 'ZPŘÍSTUPNÍ SE MÍSTNOST S CHATEM', 'desc' => '*čas oveření KINO místnosti<br>s chatem a odpočtem do začátku streamu', 'type' => 'timestamp'),
                     array('sql' => 'cas_do', 'name' => 'UZAVŘE SE', 'desc' => '*čas uzavření kino místnosti<br>*počítejte, že po skončení livestreamu<br>může pokračovat diskuse v chatu<br><br>*toto časové okno zároveň určuje<br>hranice historie zpráv v chatu', 'type' => 'timestamp')
                 );
         break;
@@ -430,6 +493,23 @@ switch ($oblast){
                     array('sql' => 'page_en', 'name' => 'OBSAH [EN]', 'desc' => '', 'type' => 'div')
                 );
         break;
+        case 'donate':
+          $vals = array(
+                    array('sql' => 'cas_od', 'name' => 'ZOBRAZÍ SE', 'desc' => '*čas kdy se začně button zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'cas_do', 'name' => 'SKRYJE SE', 'desc' => '*čas kdy se přestane button zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'nazev', 'name' => 'TEXT [CZ]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'nazev_en', 'name' => 'TEXT [EN]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'odkaz', 'name' => 'ODKAZ', 'desc' => '', 'type' => 'txt')
+                  );
+        break;
+        case 'lista':
+          $vals = array(
+                    array('sql' => 'cas_od', 'name' => 'ZOBRAZÍ SE', 'desc' => '*čas kdy se začně lišta zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'cas_do', 'name' => 'SKRYJE SE', 'desc' => '*čas kdy se přestane lišta zobrazovat', 'type' => 'timestamp'),
+                    array('sql' => 'lista', 'name' => 'TEXT [CZ]', 'desc' => '', 'type' => 'txt'),
+                    array('sql' => 'lista_en', 'name' => 'TEXT [EN]', 'desc' => '', 'type' => 'txt')                    
+                  );
+        break;
       }
 
       if (isset($id) && $akce == 'edit') {
@@ -464,7 +544,7 @@ switch ($oblast){
         </script>
         ';
 
-      } else if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage') {
+      } else if ($oblast == 'news' || $oblast == 'mag' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage' || $oblast == 'pages') {
 
         $editor_count = 1;
 
@@ -510,7 +590,7 @@ switch ($oblast){
             echo '<input autocomplete="off" type="text"';
               if ($vals[$v]['sql'] == 'hash') {echo ' disabled';}
               if (isset($id) && $akce == 'edit') {echo ' value="'.$editing[$vals[$v]['sql']].'"';} else
-              if ($vals[$v]['sql'] == 'link' && ($oblast == 'blok' || $oblast == 'news' || $oblast == 'venue')) {echo ' value="'.$_SESSION['rok'].'-"';}
+              if ($vals[$v]['sql'] == 'link' && ($oblast == 'blok' || $oblast == 'news' || $oblast == 'mag' || $oblast == 'venue' || $oblast == 'pages')) {echo ' value="'.$_SESSION['rok'].'-"';}
             echo ' name="'.$vals[$v]['sql'].'">';
           break;
           // TEXTAREA
@@ -593,7 +673,7 @@ switch ($oblast){
               echo '
 
               </script>
-              <div id="editorjs_'.$editor_count.'" class="editorjs" name="'.$vals[$v]['sql'].'"></div><div class="editor_preview'; if ($oblast == 'partneri' || $oblast == 'news') {echo ' partneri';} echo '" id="editor_preview_'.$editor_count.'"></div><input class="fullthumb" id="editor_json_'.$editor_count.'">
+              <div id="editorjs_'.$editor_count.'" class="editorjs" name="'.$vals[$v]['sql'].'"></div><div class="editor_preview'; if ($oblast == 'partneri' || $oblast == 'pages' || $oblast == 'news' || $oblast == 'mag') {echo ' partneri';} echo '" id="editor_preview_'.$editor_count.'"></div><input class="fullthumb" id="editor_json_'.$editor_count.'">
               ';
 
             $editor_count++;
@@ -604,7 +684,8 @@ switch ($oblast){
           case 'select':
             echo '<select autocomplete="off" name="'.$vals[$v]['sql'].'"';
               if ($oblast == 'program' && $vals[$v]['sql'] == 'typ') {echo ' class="programtype"';} else
-              if ($oblast == 'event' && $vals[$v]['sql'] == 'typ') {echo ' class="katselect"';}
+              if ($oblast == 'event' && $vals[$v]['sql'] == 'typ') {echo ' class="katselect"';} else 
+              if ($oblast == 'event' && $vals[$v]['sql'] == 'soutez') {echo ' class="soutezselect"';}
               echo '>';
               if (isset($vals[$v]['values'])) {
                 $values = explode(",", $vals[$v]['values']);
@@ -641,6 +722,19 @@ switch ($oblast){
                   <option value="2"';
                   if ($akce == 'edit' && $editing[$vals[$v]['sql']] == 2) {echo ' selected="selected"';}
                   echo '>ONLINE IHNED</option>';
+              } else if ($vals[$v]['sql'] == 'soutez') {
+                  echo '
+                  <option value="0"';
+                  if ($akce == 'edit' && $editing[$vals[$v]['sql']] == 0) {echo ' selected="selected"';}
+                  echo '>-</option>';
+                  echo '
+                  <option value="1"';
+                  if ($akce == 'edit' && $editing[$vals[$v]['sql']] == 1) {echo ' selected="selected"';}
+                  echo '>SOUTEŽNÍ</option>';
+                  echo '
+                  <option value="2"';
+                  if ($akce == 'edit' && $editing[$vals[$v]['sql']] == 2) {echo ' selected="selected"';}
+                  echo '>NESOUTĚŽNÍ</option>';
               } else {
                 if ($vals[$v]['sql'] == 'id_event1' || $vals[$v]['sql'] == 'id_event2') {
                   $search_var = 'id_event';
@@ -649,14 +743,19 @@ switch ($oblast){
                 }
 
                 $table_test = $vals[$v]['fkey'];
+                $addoner = false;
+
+                if (substr($vals[$v]['fkey'], 0, 4) == 'blok') {
+                  $addoner = ', zkr';
+                }
 
                 $selected = false;
-                $f_table = mysqli_query($conn, 'SELECT id, nazev FROM '.$vals[$v]['fkey']);
+                $f_table = mysqli_query($conn, 'SELECT id, nazev'.$addoner.' FROM '.$vals[$v]['fkey']);
                   while ($opt = mysqli_fetch_assoc($f_table)) {
                     echo '
                     <option value="'.$opt['id'].'"';
                       if ($akce == 'edit' && $opt['id'] == $editing[$search_var] && $vals[$v]['fkey'] == $table_test) {echo ' selected="selected"'; $selected = true;}
-                    echo '>'.$opt['nazev'].'</option>';
+                    echo '>'; if ($addoner) {echo $opt['zkr'].' - ';} echo $opt['nazev'].'</option>';
                   }
             }
             /*
@@ -666,7 +765,7 @@ switch ($oblast){
               echo '>[ONLINE FAMUFEST]</option>';
             }
             */
-            if ($vals[$v]['sql'] != 'color') {
+            if ($vals[$v]['sql'] != 'color' && $vals[$v]['sql'] != 'soutez') {
               echo '<option value="0"';
                 if ((($vals[$v]['sql'] == 'id_blok' || $vals[$v]['sql'] == 'id_event' || isset($vals[$v]['values']) == 'blok,event') && $akce != 'edit') || ($akce == 'edit' && !$selected)) {echo ' selected';}
               echo '>-</option>';
@@ -677,9 +776,23 @@ switch ($oblast){
           // CHECKBOX
           ///////////////
           case 'checkbox':
+            if ($vals[$v]['fkey']) {
+                $f_table = mysqli_query($conn, 'SELECT id, nazev FROM '.$vals[$v]['fkey']);
+                $prk = 1;
+                  while ($opt = mysqli_fetch_assoc($f_table)) {
+                    echo '<input class="katOpt" type="checkbox" idkatr="'.$opt['id'].'" autocomplete="off" name="'.$vals[$v]['sql'].'"';
+                      if ($akce == 'edit' && strpos($editing[$vals[$v]['sql']], '|'.$opt['id'].'|') !== false) {echo ' checked';}
+                    echo '>'.$opt['nazev'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                    if ($prk % 3 == 0) {
+                      echo '<br>';
+                    }
+                    $prk++;
+                  }
+            } else {
             echo '<input type="checkbox" autocomplete="off" name="'.$vals[$v]['sql'].'"';
               if (($akce == 'edit' && $editing[$vals[$v]['sql']] == 1) || ($akce != 'edit' && $vals[$v]['sql'] == 'online')) {echo ' checked';}
             echo '>';
+            }
           break;
           // DATE
           ///////////////
@@ -745,7 +858,7 @@ switch ($oblast){
       </form>
       ';
 
-      if ($oblast == 'news' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage') {
+      if ($oblast == 'news' || $oblast == 'mag' || $oblast == 'partneri' || $oblast == 'about' || $oblast == 'contacts' || $oblast == 'entrypage' || $oblast == 'pages') {
         echo '
         <script>
 

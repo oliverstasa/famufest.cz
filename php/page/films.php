@@ -11,12 +11,13 @@ echo '
     $aramis = 0;
     $now = date('Y-m-d', time());
     $vcera = date('Y-m-d', strtotime("-1 days")); // včera
-    $sql = 'SELECT DISTINCT id_kat,
-                   (SELECT nazev FROM kategorie WHERE id = event.id_kat) AS nazev,
-                   (SELECT nazev_en FROM kategorie WHERE id = event.id_kat) AS nazev_en,
-                   (SELECT link FROM kategorie WHERE id = event.id_kat) AS link,
+    $katos = array();
+    $sql = 'SELECT id_kat,
                    (SELECT COUNT(*) FROM event WHERE typ = "event" AND embed <> "" AND rok = "'.$_SESSION['rok'].'") AS zaznamy,
-                   (SELECT COUNT(*) FROM event WHERE typ = "event" AND aramis = 1 AND rok = "'.$_SESSION['rok'].'") AS aramis,
+                   (SELECT COUNT(*) FROM event WHERE typ = "film" AND aramis = 1 AND rok = "'.$_SESSION['rok'].'") AS aramis,
+                   (SELECT COUNT(*) FROM blok WHERE rok = "'.$_SESSION['rok'].'") AS bloky,
+                   (SELECT COUNT(*) FROM event WHERE soutez = "1" AND rok = "'.$_SESSION['rok'].'") AS soutez,
+                   (SELECT COUNT(*) FROM event WHERE soutez = "2" AND rok = "'.$_SESSION['rok'].'") AS nesoutez,
                    (SELECT COUNT(*)
                            FROM program
                            WHERE (typ = "blok" AND online = "1" AND datum = "'.$vcera.'" AND (SELECT COUNT(*) FROM event WHERE embed <> "" AND id_blok IN (SELECT id_event FROM program WHERE typ = "blok" AND datum = "'.$vcera.'")) > 0)
@@ -24,7 +25,14 @@ echo '
                               OR (typ = "blok" AND online = "2" AND datum = "'.$now.'" AND (SELECT COUNT(*) FROM event WHERE embed <> "" AND id_blok IN (SELECT id_event FROM program WHERE typ = "blok" AND datum = "'.$now.'")) > 0)
                               OR (typ = "event" AND online = "2" AND (SELECT COUNT(*) FROM event WHERE typ = "film" AND embed <> "" AND event.id IN (SELECT id_event FROM program WHERE typ = "event" AND datum = "'.$now.'")) > 0)) AS k_prehrani
             FROM event WHERE rok = "'.$_SESSION['rok'].'"
-            ORDER BY id_kat';
+            ORDER BY RAND()';
+
+            /*
+                  (SELECT nazev FROM kategorie WHERE id = event.id_kat) AS nazev,
+                  (SELECT nazev_en FROM kategorie WHERE id = event.id_kat) AS nazev_en,
+                  (SELECT link FROM kategorie WHERE id = event.id_kat) AS link,
+            */
+
     $kat = mysqli_query($conn, $sql);
     if (mysqli_num_rows($kat) > 0) {
         //$dx1 = $dx2 = true;
@@ -73,16 +81,37 @@ echo '
             }
             */
 
-            $adr = $cat['link'];
-            $nazev = lang($cat['nazev'], $cat['nazev_en']);
-            $link = '/films/category/'.$adr;
+            
+            $usek = substr($cat['id_kat'], 1, -1);
+            $kats = explode('||', $usek);
+            
+            for ($kr = 0; $kr < count($kats); $kr++) {
 
-            echo '
-            <div class="link" link="'.$link.'">'.$nazev.'</div>';
+              if (array_search($kats[$kr], $katos) === false) {
 
-            $aramis = $cat['aramis'];
+                $katr = mysqli_query($conn, 'SELECT nazev, nazev_en, link FROM kategorie WHERE id = '.$kats[$kr]);
+
+                  $ku = mysqli_fetch_assoc($katr);
+                  array_push($katos, $kats[$kr]);
+
+                $adr = $ku['link'];
+                $nazev = lang($ku['nazev'], $ku['nazev_en']);
+                $link = '/films/category/'.$adr;
+
+                echo '
+                <div class="link" link="'.$link.'">'.$nazev.'</div>';
+    
+              }
+
+            }
 
           }
+          
+          $aramis = $cat['aramis'];
+          $bloky = $cat['bloky'];
+
+          $soutez = $cat['soutez'];
+          $nesoutez = $cat['nesoutez'];
 
         }
 
@@ -114,6 +143,27 @@ if ($aramis > 0) {
 
   echo '
   <div class="link" link="/films/category/aramis-price">'.lang('ARAMISOVA CENA', 'ARAMIS PRICE').'</div>';
+
+}
+
+if ($bloky > 0) {
+
+  echo '
+  <div class="link" link="/films/category/blocks">'.lang('BLOKY', 'BLOCKS').'</div>';
+
+}
+
+if ($soutez > 0) {
+
+  echo '
+  <div class="link" link="/films/category/competition">'.lang('SOUTĚŽNÍ', 'COMPETITION').'</div>';
+
+}
+
+if ($nesoutez > 0) {
+
+  echo '
+  <div class="link" link="/films/category/out-of-competition">'.lang('NESOUTĚŽNÍ', 'OUT OF COMPETITION').'</div>';
 
 }
 

@@ -91,6 +91,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
             #menu li.live .toplay {background: url('/data/img/playbutton_white.png') center center no-repeat; background-size: contain;} /* var(--url) */
             .blok:hover .toplay.night {background: url('/data/img/playbutton_black.png') center center no-repeat; background-size: contain;}
             .blok:hover .toplay.day, .toplay.night, .toplay.day {background: url('/data/img/playbutton_white.png') center center no-repeat; background-size: contain;}
+  .films .content {overflow-y: hidden;}
 
             .thisyear .nazev {color: red !important;}
               .thisyear .delka {color: var(--elem-color-inverse) !important;}
@@ -114,6 +115,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
       .fullpopis p, .fullpopis h1 {max-width: 60vh;}
 
     .novinka .fullpopis {padding-bottom: 10vh; max-width: 60vw; -webkit-transform: translate3d(0, 0, 0);}
+    .novinka img {max-width: 70vw !important;} 
 
   #partners h1 {font-size: 1.4vh; padding-bottom: 5vh;}
   .partners {padding-bottom: 3vh;}
@@ -191,6 +193,20 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
         .oko {width: 1.4vh; height: 1.4vh; background: url('/data/img/oko.png') center center no-repeat; background-size: contain; float: left; margin-top: 0.35vh;}
       #streamidle {text-align: left; text-align: left; position: absolute; font-family: regular; color: white;}
       #streamidle a {float: right; color: white;}
+
+  #playPlaylist {width: 60vh; height: 34vh; margin-top: 4vh; position: absolute; z-index: 999; background: rgba(255, 255, 255, 0.5); text-align: center; transition: all 0.3s ease;}
+    #playPlaylist .playText {position: absolute; color: black; top: 50%; left: 50%; transform: translate(-50%, -50%); user-select: none; font-size: 1.8vh;}
+                  .playText .playBtn {width: 15vh; height: 15vh; background: url('/data/img/playbutton_black.png') center center no-repeat; background-size: contain;}
+    #playPlaylist:hover {cursor: pointer; background: rgba(255, 255, 255, 1);}
+    #playPlaylist.profilm {margin-top: 0;}
+  .showreelFilmu, #playlist {width: 60vh; height: 34vh; margin: 2vh 0 5vh 0;}
+    #playlist {padding-bottom: 5vh;}
+      #playlist.profilm {margin: 0; margin-bottom: 5vh;}
+    .showreelFilmu {margin-top: 4vh; position: absolute; z-index: 998;}
+    .showreelFilmu.profilm {margin-top: 0;}
+  .vimeoPlaylist {display: none;}
+  #spotik {width: 100%; height: 100%;}
+  .reklamnilista {font-weight: normal; margin-top: 5vh; font-size: 1.8vh;}
 
 @keyframes fadein {
     0%   {opacity: 0;}

@@ -17,7 +17,7 @@ include '../fce.php';
       if ($vysledek['video'] != '' && $vysledek['thumb'] != '') {
 
           $result = '
-          <video class="center" autoplay muted loop poster="/data/up/'.$vysledek['thumb'].'">
+          <video class="center fadeout" autoplay muted loop> <!-- poster="/data/up/'.$vysledek['thumb'].'" --> 
             <source src="/data/up/'.$vysledek['video'].'"></source>
           </video>
 

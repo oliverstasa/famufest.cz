@@ -334,6 +334,7 @@ function helfer($page, $cont = false) {
             <li>100% BÍLÉ (žádné barvy = čistý pozitiv)</li>
             <li>TRANSPARENTNÍ (optimálně = není nutno)</li>
             <li>ve formátu .PNG</li>
+            <li>oříznuté ke grafickému obsahu (žádné prázdno v okrajích)</li>
           </ul>
           (nedodržení těchto podmínek povede ke grafické sebevraždě)<br>
         <li><strong>PARTNER PŘIDÁN ✓</strong></li>

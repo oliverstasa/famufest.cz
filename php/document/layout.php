@@ -54,14 +54,17 @@
           (SELECT COUNT(*) FROM about WHERE rok = "'.$rok.'") AS ofestu,
           (SELECT COUNT(*) FROM contacts WHERE rok = "'.$rok.'") AS kontakt,
           (SELECT COUNT(*) FROM partneri WHERE rok = "'.$rok.'") AS partneri,
-          (SELECT COUNT(*) FROM news WHERE rok = "'.$rok.'") AS jsounovinky,
+          (SELECT COUNT(*) FROM news WHERE rok = "'.$rok.'" AND publikovano = "1") AS jsounovinky,
+          (SELECT COUNT(*) FROM mag WHERE rok = "'.$rok.'" AND publikovano = "1" AND cas_od > "'.$now.'") AS jemag,
           (SELECT COUNT(*) FROM program WHERE rok = "'.$rok.'") AS jeprogram,
           (SELECT rok FROM rok WHERE active = 1) AS actrok,
+          (SELECT COUNT(*) FROM pages WHERE publikovano = "1" AND cas_do > "'.$ymdhis.'" AND cas_od < "'.$ymdhis.'") AS stranky,
           nazev, nazev_en, link
           FROM news WHERE publikovano = 1 AND cas_od < "'.$ymdhis.'" ORDER BY cas_od DESC LIMIT 1
           ';
   $day_ress = mysqli_query($conn, $sql);
   $def = mysqli_fetch_assoc($day_ress); // $jeden
+
 
   if ($def['program'] != 0 && $def['actrok'] == $rok) { // $jeden['COUNT(*)']
     $link_program = '/programme/day/'.date('Y-m-d');
@@ -97,6 +100,18 @@
     <li link="/submit">'.lang('PŘIHLÁSIT DÍLO', 'SUBMIT WORK').'</li>';
     }
 
+    if ($def['stranky'] > 0) {
+
+      $stranky_sql = 'SELECT nazev, nazev_en, link FROM pages WHERE publikovano = "1" AND cas_do > "'.$ymdhis.'" AND cas_od < "'.$ymdhis.'"';
+      $stranky_ress = mysqli_query($conn, $stranky_sql);
+
+        while ($stranka = mysqli_fetch_assoc($stranky_ress)) {
+          echo '
+          <li link="/p/'.$stranka['link'].'">'.lang($stranka['nazev'], $stranka['nazev_en']).'</li>';
+        }
+
+    }
+
     if ($def['jeprogram'] != 0) {
     echo '
     <li link="'.$link_program.'" id="prg">'.lang('PROGRAM', 'PROGRAMME').'</li>';
@@ -122,6 +137,10 @@
     if ($def['jsounovinky'] > 0) {
     echo '
     <li link="/news">'.lang('NOVINKY', 'NEWS').'</li>';
+    }
+    if ($def['jemag'] > 0) {
+    echo '
+    <li link="/mag">'.lang('MAGAZÍN', 'MAGAZINE').'</li>';
     }
     if ($def['ofestu'] != 0) {
     echo '

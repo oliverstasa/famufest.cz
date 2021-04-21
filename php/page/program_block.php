@@ -20,14 +20,47 @@ if (isset($_GET['b'])) {
                                     ORDER BY '.lang('nazev', 'nazev_en'));
 
     $blok = mysqli_query($conn, 'SELECT
-                                 nazev, nazev_en, zkr
+                                 nazev, nazev_en, zkr, playlist, reklama, podcast
                                  FROM blok
                                  WHERE link = "'.$_GET['b'].'"');
 
     if (mysqli_num_rows($program) > 0) {
 
+      $necohraje = mysqli_query($conn, 'SELECT COUNT(*) AS k_prehrani FROM program WHERE typ = "blok" AND id_event = (SELECT id FROM blok WHERE link = "'.$_GET['b'].'") AND ((online = 1 AND datum = "'.$vcera.'") OR (online = 2 AND datum = "'.$now.'"))');
+      $hrajeme = mysqli_fetch_assoc($necohraje);  
+
+      $muzehrat = $hrajeme['k_prehrani'];
+
       $blok_sql = mysqli_fetch_assoc($blok);
       echo '<h1>'.$blok_sql['zkr'].' — '.lang($blok_sql['nazev'], $blok_sql['nazev_en']).'</h1>';
+
+      if ($blok_sql['reklama'] && $blok_sql['playlist'] && $muzehrat > 0) {
+
+        $prgThumb = mysqli_query($conn, 'SELECT thumb FROM event WHERE id_blok = (SELECT id FROM blok WHERE link = "'.$_GET['b'].'") ORDER BY RAND()');
+
+        echo '<div id="playlist"><div id="playPlaylist"><div class="playText"><div class="playBtn"></div><br>'.lang('PŘEHRÁT FILMY', 'PLAY FILMS').'</div></div><div class="showreelFilmu" data-thumbs="';
+
+        $imgs = array();
+        while ($evt = mysqli_fetch_assoc($prgThumb)) {
+          if ($evt['thumb']) {
+            array_push($imgs, $evt['thumb']);
+            $lastThumb = $evt['thumb'];
+          }
+        }
+
+        echo join(',', $imgs);
+        
+        echo '" style="background: url(\'/data/up/s/'.$lastThumb.'\') no-repeat center center; background-size: cover;"></div>';
+        echo '<iframe src="/data/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>';
+        echo '<div class="ffspot"><video autoplay id="spotik"><source src="/data/up/'.$blok_sql['reklama'].'" type="video/mp4"></video></div>';
+        echo '<div class="vimeoPlaylist"><iframe class="vimeo" src="'.$blok_sql['playlist'].'/embed" allowfullscreen frameborder="0"></iframe></div>';
+        echo '</div>';
+
+      } else if ($blok_sql['playlist'] && $muzehrat) {
+
+        echo $blok_sql['playlist'].'<br><br>';
+
+      }
 
       while ($event = mysqli_fetch_assoc($program)) {
 
@@ -58,8 +91,6 @@ if (isset($_GET['b'])) {
           ';
 
       }
-
-
 
       $dny = mysqli_query($conn, 'SELECT
                                   datum, zacatek, konec,
@@ -100,12 +131,33 @@ if (isset($_GET['b'])) {
 
       }
 
+      
+      
+      if ($blok_sql['podcast'] && strpos($blok_sql['podcast'], 'soundcloud.com') !== false) {
+
+        //$link = substr($blok_sql['podcast'], strpos($blok_sql['podcast'], 'soundcloud.com/')+15);
+
+        echo '<br><br><h1>'.lang('Podcast', 'Podcast').'</h1><br>'
+        //.str_replace('width="100%"', 'style="width: 60vh"', $blok_sql['podcast']).
+        .'<iframe style="width: 60vh; height: 20vh" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url='.$blok_sql['podcast'].'"></iframe>'.
+        '<br>';
+
+      }
+
 
 
     } else {
 
       echo '<h1>ŽÁDNÝ ZÁZNAM</h1>';
 
+    }
+
+    $now = date('Y-m-d H:i:s', time());  
+    $lista = mysqli_query($conn, 'SELECT lista, lista_en FROM lista WHERE cas_od < "'.$now.'" AND cas_do > "'.$now.'" LIMIT 1');
+
+    if (mysqli_num_rows($lista) > 0) {
+      $ls = mysqli_fetch_assoc($lista);
+      echo '<h1 class="reklamnilista">'.lang($ls['lista'], $ls['lista_en']).'</h1>';
     }
 
     include '../sql_close.php';

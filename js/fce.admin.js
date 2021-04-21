@@ -33,7 +33,7 @@ $(document).on('keyup', 'input[name="zkr"], input[name="nazev_en"]', function(){
         $('input[name="link"]').val($('#rok_select').val()+'-'+input);
       }
     break;
-    case 'news': case 'venue':
+    case 'news': case 'venue': case 'mag': case 'pages':
       $('input[name="link"]').val($('#rok_select').val()+'-'+input);
     break;
     default:
@@ -354,7 +354,7 @@ $('.programtype').change(function(){
 ////////////////////////////////////////////////////////////////////////////////
 function check_event() {
   if ($('.katselect option[value="film"]').is(':selected')) {
-    $('select[name="id_kat"]').closest('tr').removeClass('hidden');
+    $('.katOpt').first().closest('tr').removeClass('hidden');
   }
   /*
   if ($('select[name="id_kat"] option:selected').length) {
@@ -366,16 +366,16 @@ function check_event() {
 // VYPUSTIT EVENT FUNKCE
 ////////////////////////////////////////////////////////////////////////////////
 $('.katselect').change(function(){
-  $('select[name="id_kat"]').val("0");
+  //$('.katOpt').val("0");
   switch($(this).val()) {
     case 'event':
-      $('select[name="id_kat"]').closest('tr').addClass('hidden');
+      $('.katOpt').first().closest('tr').addClass('hidden');
     break;
     case 'film':
-      $('select[name="id_kat"]').closest('tr').removeClass('hidden');
+      $('.katOpt').first().closest('tr').removeClass('hidden');
     break;
     default:
-      $('select[name="id_kat"]').closest('tr').addClass('hidden');
+      $('.katOpt').first().closest('tr').addClass('hidden');
     break;
   }
 });
@@ -449,10 +449,19 @@ $("#db_form").submit(function(e){
   $('#db_form div.editorjs, #db_form input[type="text"], #db_form select, #db_form input[type="checkbox"], #db_form input[type="date"], #db_form input[type="time"], #db_form input[type="datetime-local"], #db_form textarea').each(function(){
     var name = $(this).attr('name');
     if ($(this).attr('type') == 'checkbox') {
-      if ($(this).is(":checked")) {
-        var val = 1;
+      if ($(this).hasClass('katOpt')) {
+        var val = '';
+        $('.katOpt').each(function(k) {
+          if ($(this).is(':checked')) {
+            val = val+'|'+$(this).attr('idkatr')+'|';
+          }
+        });
       } else {
-        var val = 0;
+        if ($(this).is(":checked")) {
+          var val = 1;
+        } else {
+          var val = 0;
+        }
       }
     } else if ($(this).attr('type') == 'time') {
       var val = $(this).val().replace(/:/g, "/dvojtecka/");

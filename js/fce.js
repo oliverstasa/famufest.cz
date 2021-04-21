@@ -5,6 +5,7 @@ $(document).on('touchstart', function(){});
 $(document).on('click touch', '#menu li, .link, .film, .news', function() {
 
     if ($('#hamburgr').is(':visible')) {$('#menu').slideUp();}
+    clearInterval(window.showImages);
     /*
     if ($(this).hasClass('go_read')) {
       window.open('https://showcase.dropbox.com/doc/FAMUFEST-36-CITARNA--A0L0jdhTGmu0w_qVjdVdJ0A7AQ-9l4gC3mAR4u1AqEwrgCd0', '_blank');
@@ -14,6 +15,10 @@ $(document).on('click touch', '#menu li, .link, .film, .news', function() {
       window.open('https://goout.net/cs/festivaly/famufest-36/vhbye/+kmqmo/', '_blank');
     }
     */
+    if ($(this).hasClass('vstupenky')) {
+      var golink = $(this).attr('odkaz');
+      window.open(golink, '_blank');
+    }
 
   var url = $(this).attr('link');
   if (url && url.length && url != "#") {
@@ -159,7 +164,7 @@ $(document).on({
   var tl = $(this);
   switch (tl.attr('class')) {
     case 'aramis': var text = jazyk('ARAMISOVA CENA', 'ARAMIS PRICE'); break;
-    case 'soutez_s': case 'soutez_c': var text = jazyk('SOUTĚŽNÍ BLOK', 'COMPETITION BLOCK'); break;
+    case 'soutez_s': case 'soutez_c': var text = jazyk('SOUTĚŽNÍ FILM', 'COMPETITION FILM'); break;
     case 'embed': var text = jazyk('FILM K PŘEHRÁNÍ', 'AVAILABLE TO WATCH'); break;
   }
 
@@ -339,12 +344,31 @@ function page(url) {
       }
     break;
     /////////////
+    case 'p':
+      stranka = url;
+      if (path[2] != null) {
+        var file = '/php/page/pages.php?p='+path[2];
+        url = 'p/'+path[2];
+      } else {
+        var file = '/php/page/pages.php';
+      }
+    break;
+    /////////////
     case 'news':
       if (path[2] != null) {
         var file = '/php/page/news.php?n='+path[2];
         url = 'news/'+path[2];
       } else {
         var file = '/php/page/news.php';
+      }
+    break;
+    /////////////
+    case 'mag':
+      if (path[2] != null) {
+        var file = '/php/page/mag.php?n='+path[2];
+        url = 'mag/'+path[2];
+      } else {
+        var file = '/php/page/mag.php';
       }
     break;
     /////////////
@@ -527,10 +551,42 @@ function page(url) {
                 $('#content').removeClass('fadeout');
                 loading('off');
               }
+
+              setTimeout(function(){
+
+                if ($('.showreelFilmu').length) {
+
+                  var attr = $('.showreelFilmu').attr('data-thumbs');
+                  if (typeof attr !== 'undefined' && attr !== false) {
+
+                  var imgsArr = $('.showreelFilmu').attr('data-thumbs').split(','),
+                      imgsArrItt = 0;
+
+                    clearInterval(window.showImages);
+                    window.showImages = setInterval(function(){
+                      
+                      $('.showreelFilmu').css({'background': 'url("/data/up/s/'+imgsArr[imgsArrItt]+'") no-repeat center center', 'background-size': 'cover'});
+
+                      if (imgsArrItt+1 >= imgsArr.length) {
+                        imgsArrItt = 0;
+                      } else {
+                        imgsArrItt++;
+                      }
+
+                    }, 3000);
+
+                  }
+
+                }
+
+              }, 1000);
+
             });
         }
         var contentchecker = setInterval(function(){
+
         if (path.length > 2 && $('.content').length) {
+          
           clearInterval(contentchecker);
           $(".content").addClass('fadeout');
             var dur = $('#content').css('transition-duration');
@@ -553,11 +609,13 @@ function page(url) {
                 loading('off');
               });
             }, pockat);
+
         }
       }, 100);
         setTimeout(function(){
           title(url);
         }, pockat);
+
       break;
       /////////////
       default:
@@ -566,7 +624,7 @@ function page(url) {
         $("#content").load(file, function(){
           $('#content').removeClass('fadeout');
             // kdyby nacital BG k novince
-            if (path[1] == 'news' && path[2] != null) {
+            if ((path[1] == 'news' || path[1] == 'p') && path[2] != null) {
               $('body').append('<div class="fullscreen_thumb fadeout"></div>');
               $.get('/php/bg_preload.php?db=news&link='+path[2], function(imgs){
                 if (imgs) {
@@ -672,6 +730,10 @@ $(document).ready(function() {
         $('#homepage video').attr('autoplay');
       }
 
+      setTimeout(function(){
+        $("#homepage video").removeClass('fadeout');
+      }, 100);
+
 });
 
 // KDYZ NEJAKEJ BOOMER ZMACKNE "ZPET"
@@ -683,5 +745,28 @@ $(window).on('popstate', function(e){
       page(url);
       e.preventDefault();
     //}, 500);
+
+});
+
+// spustit playlist
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('click touch', '#playPlaylist', function(){
+
+  $(this).fadeOut(300, function(){
+    $(this).remove();
+  });
+
+  $('.showreelFilmu').fadeOut(300, function(){
+    clearInterval(window.showImages);
+    window.showImages = false;
+    $(this).remove();
+    $('#spotik')[0].play();
+  });
+
+  $('#spotik')[0].onended = function() {
+    $('.ffspot').fadeOut(300, function(){
+      $('.vimeoPlaylist').fadeIn(300);
+    });
+  };
 
 });

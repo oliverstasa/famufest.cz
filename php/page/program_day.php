@@ -111,7 +111,9 @@ session_start();
 
                 if ($event['typ'] == 'blok') {echo $nazev['zkr'].' — ';}
 
-                echo lang($nazev['nazev'], $nazev['nazev_en']); echo '</h2><div class="time">';
+                echo lang($nazev['nazev'], $nazev['nazev_en']); echo '</h2>';
+                //if ($event['k_prehrani'] && $_SESSION['filmoteka'] > 0) {echo '<div class="embed"></div>';}
+                echo '<div class="time">';
 
                 if (!isset($_GET['d']) || $_GET['d'] == 'all') {
                   $den = datumtoday($event['datum']);
@@ -135,6 +137,15 @@ session_start();
 
     echo '<h1>'.lang('ŽÁDNÝ PROGRAM', 'NO PROGRAMME').'</h1>';
 
+  }
+
+  // sponzor
+  $now = date('Y-m-d H:i:s', time());  
+  $lista = mysqli_query($conn, 'SELECT lista, lista_en FROM lista WHERE cas_od < "'.$now.'" AND cas_do > "'.$now.'" LIMIT 1');
+
+  if (mysqli_num_rows($lista) > 0) {
+    $ls = mysqli_fetch_assoc($lista);
+    echo '<h1 class="reklamnilista">'.lang($ls['lista'], $ls['lista_en']).'</h1>';
   }
 
 ?>

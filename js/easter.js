@@ -15,7 +15,7 @@ function lets_dance() {
 const bubi = 'bubi'.split(''); let bubiIn = new Array(bubi.length);
 
 const arcade = 'arcade'.split(''); let arcaIn = new Array(arcade.length);
-const petr = 'petrmichal'.split(''); let petrIn = new Array(petr.length);
+const petr = 'petrmichal666'.split(''); let petrIn = new Array(petr.length);
 const score = 'score'.split(''); let scorIn = new Array(score.length);
 
 const hamburgr = 'hamburger'.split(''); let hambIn = new Array(hamburgr.length);
