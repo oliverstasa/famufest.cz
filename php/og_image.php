@@ -15,6 +15,8 @@
               break;
             }
 
+          } else {
+            $og_sql = 'SELECT og FROM rok WHERE active = 1';
           }
 
         break;
@@ -28,6 +30,8 @@
               break;
             }
 
+          } else {
+            $og_sql = 'SELECT og FROM rok WHERE active = 1';
           }
 
         break;
@@ -36,6 +40,10 @@
           if (isset($url[2])) {
 
               $og_sql = 'SELECT thumb FROM news WHERE link = "'.$url[2].'"';
+
+          } else {
+
+              $og_sql = 'SELECT og FROM rok WHERE active = 1';
 
           }
 
@@ -61,14 +69,11 @@
 
         include './php/sql_close.php';
 
+        
       } else {
 
-          $url = explode("/", $uri);
-          if ($url[1] == 'gallery') {
-            echo '<meta property="og:image" content="https://famufest.cz/data/img/galerie.jpg">';
-          } else {
-            echo '<meta property="og:image" content="https://famufest.cz/data/FAMUFEST_OG_1.png">';
-          }
+          //$url = explode("/", $uri);
+          echo '<meta property="og:image" content="https://famufest.cz/data/FF37_OG.jpg">';
 
       }
 

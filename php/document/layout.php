@@ -16,11 +16,11 @@
     <meta name="viewport" content="width=device-width">
 
     <link rel="icon" href="/data/fav_<?php echo $_SESSION['daytime']; ?>.png">
-    <link href="/css/main.css?v=2.34" rel="stylesheet">
+    <link href="/css/main.css?v=2.4" rel="stylesheet">
     <link href="/css/<?php echo $_SESSION['daytime']; ?>.css" rel="stylesheet">
 
     <script src="/js/jq.js" type="text/javascript"></script>
-    <script src="/js/fce.js?v=2.32" type="text/javascript"></script>
+    <script src="/js/fce.js?v=2.4" type="text/javascript"></script>
 
     <?php include './php/og_image.php'; ?>
 
@@ -55,7 +55,7 @@
           (SELECT COUNT(*) FROM contacts WHERE rok = "'.$rok.'") AS kontakt,
           (SELECT COUNT(*) FROM partneri WHERE rok = "'.$rok.'") AS partneri,
           (SELECT COUNT(*) FROM news WHERE rok = "'.$rok.'" AND publikovano = "1") AS jsounovinky,
-          (SELECT COUNT(*) FROM mag WHERE rok = "'.$rok.'" AND publikovano = "1" AND cas_od > "'.$now.'") AS jemag,
+          (SELECT COUNT(*) FROM mag WHERE rok = "'.$rok.'" AND publikovano = "1" AND cas_od < "'.$ymdhis.'") AS jemag,
           (SELECT COUNT(*) FROM program WHERE rok = "'.$rok.'") AS jeprogram,
           (SELECT rok FROM rok WHERE active = 1) AS actrok,
           (SELECT COUNT(*) FROM pages WHERE publikovano = "1" AND cas_do > "'.$ymdhis.'" AND cas_od < "'.$ymdhis.'") AS stranky,

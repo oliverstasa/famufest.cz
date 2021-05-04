@@ -34,7 +34,7 @@ if (isset($_GET['b'])) {
       $blok_sql = mysqli_fetch_assoc($blok);
       echo '<h1>'.$blok_sql['zkr'].' — '.lang($blok_sql['nazev'], $blok_sql['nazev_en']).'</h1>';
 
-      if ($blok_sql['reklama'] && $blok_sql['playlist'] && $muzehrat > 0) {
+      if ($blok_sql['reklama'] && $blok_sql['playlist'] && $muzehrat > 0 && areYouIphone() != true) {
 
         $prgThumb = mysqli_query($conn, 'SELECT thumb FROM event WHERE id_blok = (SELECT id FROM blok WHERE link = "'.$_GET['b'].'") ORDER BY RAND()');
 
@@ -52,15 +52,35 @@ if (isset($_GET['b'])) {
         
         echo '" style="background: url(\'/data/up/s/'.$lastThumb.'\') no-repeat center center; background-size: cover;"></div>';
         echo '<iframe src="/data/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>';
-        echo '<div class="ffspot"><video autoplay id="spotik"><source src="/data/up/'.$blok_sql['reklama'].'" type="video/mp4"></video></div>';
+        echo '<div class="ffspot"><video id="spotik" playsinline><source src="/data/up/'.$blok_sql['reklama'].'" type="video/mp4"></video></div>';
         echo '<div class="vimeoPlaylist"><iframe class="vimeo" src="'.$blok_sql['playlist'].'/embed" allowfullscreen frameborder="0"></iframe></div>';
         echo '</div>';
 
-      } else if ($blok_sql['playlist'] && $muzehrat) {
+      } else if ($blok_sql['playlist'] && $muzehrat > 0) {
 
-        echo $blok_sql['playlist'].'<br><br>';
+        echo '<div class="vimeoPlaylist" style="display: block !important;"><iframe class="vimeo" src="'.$blok_sql['playlist'].'/embed" allowfullscreen frameborder="0"></iframe></div><br>';
 
       }
+
+      
+
+
+
+      
+      if ($blok_sql['podcast'] && strpos($blok_sql['podcast'], 'soundcloud.com') !== false) {
+
+        //$link = substr($blok_sql['podcast'], strpos($blok_sql['podcast'], 'soundcloud.com/')+15);
+
+        echo '<h1>'.lang('Podcast', 'Podcast').'</h1><br>'
+        //.str_replace('width="100%"', 'style="width: 60vh"', $blok_sql['podcast']).
+        .'<iframe style="width: 60vh; height: 20vh" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url='.$blok_sql['podcast'].'"></iframe>'.
+        '<br><br><br><h1>'.lang('Filmy', 'Films').'</h1>';
+
+      }
+
+
+
+
 
       while ($event = mysqli_fetch_assoc($program)) {
 
@@ -128,19 +148,6 @@ if (isset($_GET['b'])) {
         }
 
         echo '</div>';
-
-      }
-
-      
-      
-      if ($blok_sql['podcast'] && strpos($blok_sql['podcast'], 'soundcloud.com') !== false) {
-
-        //$link = substr($blok_sql['podcast'], strpos($blok_sql['podcast'], 'soundcloud.com/')+15);
-
-        echo '<br><br><h1>'.lang('Podcast', 'Podcast').'</h1><br>'
-        //.str_replace('width="100%"', 'style="width: 60vh"', $blok_sql['podcast']).
-        .'<iframe style="width: 60vh; height: 20vh" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url='.$blok_sql['podcast'].'"></iframe>'.
-        '<br>';
 
       }
 

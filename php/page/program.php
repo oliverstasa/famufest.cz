@@ -11,7 +11,7 @@ echo '<div class="link_list">';
   
   $now = date('Y-m-d H:i:s', time());
 
-  $dny = mysqli_query($conn, 'SELECT distinct(datum), (SELECT COUNT(*) FROM donate WHERE rok = "'.$_SESSION['rok'].'" AND cas_od < "'.$now.'" AND cas_do > "'.$now.'") AS donate FROM program WHERE rok = '.$_SESSION['rok']);
+  $dny = mysqli_query($conn, 'SELECT distinct(datum), (SELECT COUNT(*) FROM donate WHERE rok = "'.$_SESSION['rok'].'" AND cas_od < "'.$now.'" AND cas_do > "'.$now.'") AS donate FROM program WHERE rok = '.$_SESSION['rok'].' ORDER BY datum');
   if (mysqli_num_rows($dny) > 0) {
 
       while ($datum = mysqli_fetch_assoc($dny)) {
@@ -20,10 +20,10 @@ echo '<div class="link_list">';
 
         $day = datumtoday($datum['datum']);
             $date = explode('-', $datum['datum']);
-            $day_date = ($date[2]*1).'. '.($date[1]*1);
+            $day_date = ($date[2]*1).'.&nbsp;'.($date[1]*1);
 
         echo '
-        <div class="link'; if ($_GET['p'] == $datum['datum']) {echo ' selected';} echo '" link="'.$link.'">'.$day.' '.$day_date.'.</div>';
+        <div class="link'; if ($_GET['p'] == $datum['datum']) {echo ' selected';} echo '" link="'.$link.'">'.$day.'&nbsp;'.$day_date.'.</div>';
 
         $donate = $datum['donate'];
 

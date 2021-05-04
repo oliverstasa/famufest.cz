@@ -31,7 +31,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
     #menu li.live.selected {background-size: 210% 100%; background-image: linear-gradient(to right, black 50%, red 50%); }
       #menu li.live.selected:hover {background-position: 97.5% 0;}
 
-  #novinka {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 2.6vh; padding: 0.8vh 0.8vh 0.8vh 5vh; position: absolute; top: 93vh; left: 0; width: 100%; max-width: calc(100% - 65vh); z-index: 11; overflow: hidden; transition: all 0.3s ease;}
+  #novinka {background: var(--elem-color-inverse); color: var(--elem-color); font-size: 2.6vh; padding: 0.8vh 0.8vh 0.8vh 5vh; position: absolute; top: 93vh; left: 0; width: 100%; max-width: calc(100% - 67vh); z-index: 11; overflow: hidden; transition: all 0.3s ease;}
     #novinka .slider {animation: slider 20s linear infinite; animation-play-state: running; white-space: nowrap; overflow: hidden; position: relative; float: left;}
     #novinka .slider div {white-space: nowrap; display: table-cell;}
 
@@ -92,6 +92,7 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
             .blok:hover .toplay.night {background: url('/data/img/playbutton_black.png') center center no-repeat; background-size: contain;}
             .blok:hover .toplay.day, .toplay.night, .toplay.day {background: url('/data/img/playbutton_white.png') center center no-repeat; background-size: contain;}
   .films .content {overflow-y: hidden;}
+    .films .content .link_list {float: left; display: -webkit-box;}
 
             .thisyear .nazev {color: red !important;}
               .thisyear .delka {color: var(--elem-color-inverse) !important;}
@@ -194,19 +195,22 @@ body, html {padding: 0; margin: 0; min-height: 100%; font-family: regular, helve
       #streamidle {text-align: left; text-align: left; position: absolute; font-family: regular; color: white;}
       #streamidle a {float: right; color: white;}
 
-  #playPlaylist {width: 60vh; height: 34vh; margin-top: 4vh; position: absolute; z-index: 999; background: rgba(255, 255, 255, 0.5); text-align: center; transition: all 0.3s ease;}
+  #playPlaylist {width: 60vh; height: 34vh; margin-top: 4vh; position: absolute; z-index: 999; background: rgba(255, 255, 255, 0.5); text-align: center; transition: all 1s ease;}
     #playPlaylist .playText {position: absolute; color: black; top: 50%; left: 50%; transform: translate(-50%, -50%); user-select: none; font-size: 1.8vh;}
                   .playText .playBtn {width: 15vh; height: 15vh; background: url('/data/img/playbutton_black.png') center center no-repeat; background-size: contain;}
     #playPlaylist:hover {cursor: pointer; background: rgba(255, 255, 255, 1);}
     #playPlaylist.profilm {margin-top: 0;}
   .showreelFilmu, #playlist {width: 60vh; height: 34vh; margin: 2vh 0 5vh 0;}
-    #playlist {padding-bottom: 5vh;}
+    #playlist {padding-bottom: 5vh; transition: all 1s ease;}
       #playlist.profilm {margin: 0; margin-bottom: 5vh;}
+      #playPlaylist.large, #playlist.large, #playlist.large .vimeo {width: 149vh !important; height: 83vh !important;}
     .showreelFilmu {margin-top: 4vh; position: absolute; z-index: 998;}
     .showreelFilmu.profilm {margin-top: 0;}
   .vimeoPlaylist {display: none;}
   #spotik {width: 100%; height: 100%;}
   .reklamnilista {font-weight: normal; margin-top: 5vh; font-size: 1.8vh;}
+  .vstupenky {background-size: 210% 100%; background-image: linear-gradient(to right, red 50%, var(--elem-color-inverse) 50%); color: var(--elem-color-inverse) !important;}
+    .vstupenky:hover {color: var(--elem-color) !important;}
 
 @keyframes fadein {
     0%   {opacity: 0;}
@@ -275,6 +279,8 @@ h1 .adresa {display: list-item; padding-left: 0;}
     .chat input[type="submit"] {background: var(--elem-color-inverse) !important; color: var(--elem-color) !important; transition: all 0.3s ease; display: block; width: 100% !important;}
       .chat input[type="submit"]:hover {background: gray !important; color: var(--elem-color-inverse) !important; cursor: pointer;}
   #streamidle {position: absolute; width: calc(100% - 6.4vw); margin-top: -5.2vw; padding: 0 3.2vw; font-family: regular; color: white; font-size: 2vw;}
+
+  #playlist, #playlist.large, #playlist.large .vimeo, #playPlaylist.large, #playPlaylist, .showreelFilmu {width: 83vw !important; height: 50vw !important;}
 
 body, html {background: var(--elem-color) !important; height: auto; min-height: auto;}
 }

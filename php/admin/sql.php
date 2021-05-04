@@ -42,7 +42,7 @@ if ($_SESSION['lord'] === true) {
 
   // VYJIMKY
   //////////////////////////////////////////////////////////////////////////////
-      } else if ($key != 'table' && $key != 'id_blok' && $key != 'id_kat' && $key !='delka' && $key != 'stream_link' && $key != 'geoblok' &&
+      } else if ($key != 'table' && $key != 'id_blok' && $key != 'id_kat' && $key !='delka' && $key != 'stream_link' && $key != 'geoblok' && $key != 'podcast' &&
                  $key != 'typ' && $key != 'active' && $key != 'aramis' && $key != 'color' && $key != 'typ_webu' && $key != 'online' && $key !='zkr' &&
                  $key != 'publikovano' && $key != 'popis' && $key != 'popis_en' && $key != 'cas_od' && $key != 'cas_do' && $key != 'soutez' && $key != 'lista') {
         if ($val) {

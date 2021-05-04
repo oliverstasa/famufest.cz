@@ -70,17 +70,17 @@ if (mysqli_num_rows($filmy) > 0) {
 
               ';
               
-              if ($film['reklama']) {
+              if ($film['reklama'] && areYouIphone() != true) {
                 echo '<div id="playlist" class="profilm">
                       <div id="playPlaylist" class="profilm">
                         <div class="playText"><div class="playBtn"></div><br>'.lang('PŘEHRÁT FILM', 'PLAY FILM').'</div>
                       </div>
                       <div class="showreelFilmu profilm" style="background: url(\'/data/up/s/'.$film['thumb'].'\') no-repeat center center; background-size: cover;"></div>
                       <iframe src="/data/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>
-                      <div class="ffspot"><video autoplay id="spotik"><source src="/data/up/'.$film['reklama'].'" type="video/mp4"></video></div>';
+                      <div class="ffspot"><video id="spotik" playsinline><source src="/data/up/'.$film['reklama'].'" type="video/mp4"></video></div>';
               }
               
-              echo '<table class="film_embed'; if ($film['reklama']) {echo ' vimeoPlaylist';} echo '"><tr><td>';
+              echo '<table class="film_embed'; if ($film['reklama'] && areYouIphone() != true) {echo ' vimeoPlaylist';} echo '"><tr><td>';
 
                 // POKUD YOUTUBE
                 if (strpos($film['embed'], 'youtube') !== false || strpos($film['embed'], 'youtu.be') !== false) {
@@ -127,6 +127,7 @@ if (mysqli_num_rows($filmy) > 0) {
               </td></tr><tr><td>
               '.lang('Film je dostupný k přehrání do dnešní půlnoci', 'Movie available to play until midnight').'
               </td></tr></table>
+              <br>
               ';
               }
 
@@ -285,8 +286,7 @@ if (mysqli_num_rows($filmy) > 0) {
           <div class="link" link="'.$link_venue.'">'.lang($den['nazev'], $den['nazev_en']).'</div>
           <div class="link" link="'.$link_blok.'">'.$blok_zkr.$cas_zacatek.'—'.$cas_konec.'</div>
           <div class="link" link="'.$link_day.'">'.$day.' '.$day_date.'</div>
-        </div>
-        <br><br><br>';
+        </div>';
 
     }
 

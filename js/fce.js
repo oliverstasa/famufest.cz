@@ -757,6 +757,7 @@ $(document).on('click touch', '#playPlaylist', function(){
   });
 
   $('.showreelFilmu').fadeOut(300, function(){
+    $('#playlist').addClass('large');
     clearInterval(window.showImages);
     window.showImages = false;
     $(this).remove();

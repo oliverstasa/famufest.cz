@@ -140,4 +140,17 @@ function json2html($data, $typ) {
 
 }
 
+// are you iphone
+/////////////////////////////////////////////////
+function areYouIphone() {
+
+  $usrAgent = $_SERVER['HTTP_USER_AGENT'];
+  if (stripos($usrAgent,"iPod") || stripos($usrAgent,"iPhone") || stripos($usrAgent,"iPad")) {
+    return true;
+  } else {
+    return false;
+  }
+
+}
+
 ?>

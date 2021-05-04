@@ -6,7 +6,7 @@ if (isset($_GET['e'])) {
 include '../fce.php';
 include '../sql_open.php';
 
-$sql = 'SELECT nazev, nazev_en, thumb, popis, popis_en, delka, embed FROM event WHERE typ = "event" AND link = "'.$_GET['e'].'"';
+$sql = 'SELECT nazev, nazev_en, thumb, popis, popis_en, delka, embed, geoblok FROM event WHERE typ = "event" AND link = "'.$_GET['e'].'"';
 $filmy = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($filmy) > 0) {
@@ -27,7 +27,12 @@ if (mysqli_num_rows($filmy) > 0) {
       $do_konce = strtotime('tomorrow')-time();
 
         $lokace = country();
-        if ($lokace == 'CZ') {
+        if ($film['geoblok'] == 1 && $lokace != 'CZ') {
+          echo '
+          <h1 class="geoblok">'.lang('Film ve Vaší zemi není dostupný', 'This movie is not available for your country').'</h1>
+          <audio autoplay style="display: none;"><source src="/data/sad_trombone.mp3" type="audio/mpeg"></audio>
+          ';
+        } else {
         echo '
         <script>
           setTimeout(function(){
@@ -78,11 +83,6 @@ if (mysqli_num_rows($filmy) > 0) {
         '.lang('Video je dostupné k přehrání po neomezenou dobu', 'Video available to play for unlimited time').'
         </td></tr></table>
         ';
-        } else {
-          echo '
-          <h1 class="geoblok">'.lang('Film ve Vaší zemi není dostupný', 'This movie is not available for your country').'</h1>
-          <audio autoplay style="display: none;"><source src="/data/sad_trombone.mp3" type="audio/mpeg"></audio>
-          ';
         }
 
     }
